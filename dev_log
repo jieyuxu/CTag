@@ -1,1 +1,12 @@
 proposal/ timeline: https://docs.google.com/document/d/1PwHCOXRdCH0rVnoNvRV-OCeNM10QH6NhPCaf7pC7t-Q/edit?usp=sharing
+
+################################################################################
+Suki 2/28:
+
+Corruption detection locally and setup for Google Cloud vision api (cloud_setup.txt).
+
+corruption code
+> https://opensource.com/article/17/2/python-tricks-artists
+
+potential future references
+> https://www.geeksforgeeks.org/python-uploading-images-in-django/

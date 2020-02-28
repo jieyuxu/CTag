@@ -1,0 +1,24 @@
+Using the Vision API with Python Guide:
+https://codelabs.developers.google.com/codelabs/cloud-vision-api-python/index.html?index=..%2F..index#0
+
+Follow guide until step 6, then:
+
+set-up python env for cloud
+> https://cloud.google.com/python/setup
+
+set-up service account
+> https://cloud.google.com/iam/docs/creating-managing-service-accounts#creating_a_service_account
+
+create api key
+> https://cloud.google.com/docs/authentication/api-keys?hl=en&visit_id=637184709147202682-2294790124&rd=1
+
+Installing Google Cloud SDK [included in repo]
+> https://cloud.google.com/sdk/docs/downloads-versioned-archives
+
+Initialize SDK with
+
+./google-cloud-sdk/bin/gcloud init
+./google-cloud-sdk/install.sh
+
+authenticating to cloud vision api
+> https://cloud.google.com/vision/docs/auth

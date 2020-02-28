@@ -1,0 +1,3 @@
+API KEY= AIzaSyCrvIb5ZFuyICLGtNXNwCnhq8t1fzrORSA
+
+** restricted to vision api
