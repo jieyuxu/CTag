@@ -1,3 +1,5 @@
 API KEY= AIzaSyCrvIb5ZFuyICLGtNXNwCnhq8t1fzrORSA
 
 ** restricted to vision api
+
+export GOOGLE_APPLICATION_CREDENTIALS=erudite-mote-269518-8ee1384d0d37.json
