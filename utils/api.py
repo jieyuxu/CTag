@@ -1,7 +1,11 @@
-#!/usr/bin/env python
+from utils.database import Users, Albums, Images, Tags, Tag_Types, Image_Tags
+from sqlalchemy import or_, and_
+from flask_sqlalchemy_session import current_session
 from os import listdir
 from PIL import Image
 
+
+sess = current_session
 
 # input listdir of images
 # get a list of all the corrupt image files
