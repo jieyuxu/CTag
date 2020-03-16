@@ -17,3 +17,16 @@ def detect_corrupt():
           img.verify() # verify that it is, in fact an image
         except (IOError, SyntaxError) as e:
           print('Bad file:', filename) # print out the names of corrupt files
+
+# get all images with tag name in descending confidence
+def search_by_tag(tag_name):
+    tags = sess.query(Tags)\
+                .filter(Tags.name == tag_name)\
+                .order_by(Tags.confidence.desc())\
+                .all()
+    images = []
+    for t in tags:
+        images.append(sess.query(Image_Tags)\
+                     .filter(Image_Tags.tag_id == t.tag_id)\
+                     .all())
+    return images

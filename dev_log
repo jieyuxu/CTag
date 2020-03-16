@@ -14,14 +14,13 @@ potential future references
 ################################################################################
 Suki 3/15:
 
-Database Schema:
+1) Database Schema:
 
 Users > Albums > Images <-> Tags
                  Tag Type > Tags
 
 User: netid, albums
 Albums: album_id, name (of album), netid, images
-Picture: Image
 Images: image_id, album_id, picture, tags
 Tags: tag id, name (of tag, i.e. "happy"), tag type, confidence score, images
 Tag_Types: name (of type, i.e. "sentiment"), tags
@@ -34,5 +33,4 @@ Images - Tags (many - many)
     *** multi. images have multi. tags
 Tag Type - Tags (1 - many)
 
-
-Notes: images are stored as OID
+2) Search and sort by tags, function in api.py

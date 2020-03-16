@@ -1,6 +1,5 @@
 from utils.database import Users, Albums, Images, Tags, Tag_Types, Image_Tags
 from utils.base import session_factory, engine, Base
-from datetime import time, datetime
 
 Base.metadata.drop_all(engine)
 Base.metadata.create_all(engine)
