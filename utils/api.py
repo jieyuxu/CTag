@@ -37,7 +37,7 @@ def search_by_tag(tag_name):
                      .all()
     return imgtg_to_img(images)
 
-# from an image object, get all tags by order of confidence
+# from an image object, get all tags by desc confidence 
 def sortConfidence(tag_obj):
     return tag_obj.confidence
 
