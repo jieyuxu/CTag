@@ -33,7 +33,7 @@ class Tags(Base):
 
     tag_id = Column(Integer, primary_key=True)
     name = Column(String(120), nullable=False)
-    confidence = Column(Integer, nullable=True)
+    confidence = Column(Integer, nullable=False)
     tag_type = Column(String(120), ForeignKey('tag_types.name'), nullable=False)
 
     images = relationship("Images", secondary = 'image_tags')

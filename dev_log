@@ -33,9 +33,10 @@ Images - Tags (many - many)
     *** multi. images have multi. tags
 Tag Type - Tags (1 - many)
 
-2) Search and sort by tags, function in api.py
+2) Images are stored as blobs (large binary object) -- notes after (3)
 
-3) Images are stored as blobs (large binary object)
+3) Search and sort by tags, functions in api.py to add to database, get tags
+from images
 
 (https://stackoverflow.com/questions/54500/storing-images-in-postgresql/10267699)
 (https://stackoverflow.com/questions/31849494/serve-image-stored-in-sqlalchemy-largebinary-column)

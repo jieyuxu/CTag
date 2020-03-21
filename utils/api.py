@@ -1,5 +1,4 @@
-from utils.database import Users, Albums, Images, Tags, Tag_Types, Image_Tags
-from sqlalchemy import or_, and_
+from utils.database import *
 from flask_sqlalchemy_session import current_session
 from os import listdir
 import base64
@@ -38,9 +37,60 @@ def search_by_tag(tag_name):
                      .all()
     return imgtg_to_img(images)
 
-# for an image, get all tags by order of confidence
+# from an image object, get all tags by order of confidence
+def sortConfidence(tag_obj):
+    return tag_obj.confidence
 
-# # add image to db
-# def add_image(filename):
-#     with open(filename, "rb") as image:
-#       f = base64.b64encode(image.read())
+def get_tags(img_obj):
+    img_tags = sess.query(Image_Tags)\
+                 .filter(Image_Tags.image_id == img_obj.image_id)\
+                 .all()
+    tags = []
+    for t in img_tags:
+        tags.append(sess.query(Tags)\
+                        .filter(Tags.tag_id == t.tag_id)
+                        .first())
+    tags.sort(key=sortConfidence, reverse=True)
+    return tags
+
+# add user with net-id
+def add_user(netid):
+    user = Users(net_id=netid)
+    sess.add(user)
+    sess.commit()
+    return user
+
+# make album, input user object
+def add_album(title, user_obj):
+    a = Albums(name=title, user=user_obj)
+    sess.add(a)
+    sess.commit()
+    return a
+
+# make tag_type
+def add_tagType(type):
+    t = Tag_Types(name=type)
+    sess.add(t)
+    sess.commit()
+    return t
+
+# make new tag
+def add_tag(tag, conf, type_obj):
+    t = Tags(name=tag, confidence=conf, type=type_obj)
+    sess.add(t)
+    sess.commit()
+    return t
+
+# add image to db, tags is an array of tag objects
+def add_image(filename, album, tags=None):
+    with open(filename, "rb") as image:
+      f = base64.b64encode(image.read())
+
+    image = Images(album=album, picture=f)
+    if tags is not None:
+        for t in tags:
+            image.tags.append(t)
+
+    sess.add(image)
+    sess.commit()
+    return image
