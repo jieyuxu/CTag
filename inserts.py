@@ -1,5 +1,6 @@
 from utils.database import Users, Albums, Images, Tags, Tag_Types, Image_Tags
 from utils.base import session_factory, engine, Base
+import base64
 
 Base.metadata.drop_all(engine)
 Base.metadata.create_all(engine)
@@ -15,8 +16,12 @@ object = Tag_Types(name='object')
 truck = Tags(name='truck', confidence=50, type=object)
 happy = Tags(name='happy', confidence=70, type=sentiment)
 
-img1 = Images(album=aiwl)
-img2 = Images(album=lrrh)
+
+with open("photo.jpeg", "rb") as image:
+  f = base64.b64encode(image.read())
+
+img1 = Images(album=aiwl, picture=f)
+img2 = Images(album=lrrh, picture=f)
 
 img1.tags.append(truck)
 img1.tags.append(happy)

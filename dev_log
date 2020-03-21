@@ -34,3 +34,34 @@ Images - Tags (many - many)
 Tag Type - Tags (1 - many)
 
 2) Search and sort by tags, function in api.py
+
+3) Images are stored as blobs (large binary object)
+
+(https://stackoverflow.com/questions/54500/storing-images-in-postgresql/10267699)
+(https://stackoverflow.com/questions/31849494/serve-image-stored-in-sqlalchemy-largebinary-column)
+
+Typically, files are stored in the filesystem and the path is stored in the
+database. This is the better solution because the web server typically has an
+efficient method of serving files from the filesystem, as opposed to the
+application sending large blobs of data dynamically.
+
+Why not use file system?
++ didn't want to use own disk storage (also not great for Heroku)
++ best to use aws but non $
++ also from some research:
+
+When images are not the only data you store, don't store them on the file
+system unless you absolutely have to. It's such a benefit to be always sure
+about your data consistency, and to have the data "in one piece" (the DB).
+BTW, PostgreSQL is great in preserving consistency.
+
+blobs vs bytea
+
+no problem with backing up blobs!
+
+Blobs, in contrast, you can stream into stdout. That helps in reducing the
+server memory footprint. Especially, when you store 4-6 MPix images.
+
+bytea (BYTE Array): for caching thumbnail images. Cache the little images to
+send it fast to the web-browser (to avoiding rendering problems) and reduce
+server processing. --> decided not to bc we want orig image

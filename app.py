@@ -11,8 +11,8 @@ sess = flask_scoped_session(session_factory, app)
 
 @app.route('/')
 def index():
-    test = search_by_tag('truck')
-    return render_template("index.html", test = test)
-    
+    images = search_by_tag('truck')
+    return render_template("index.html", images = images)
+
 if __name__ == '__main__':
    app.run(host='0.0.0.0', port=8000, debug = True)

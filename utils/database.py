@@ -1,4 +1,4 @@
-from sqlalchemy import Column, String, Integer, BLOB, ForeignKey
+from sqlalchemy import Column, String, Integer, ForeignKey, LargeBinary
 from sqlalchemy.orm import relationship
 from utils.base import Base
 
@@ -23,6 +23,7 @@ class Images(Base):
 
     image_id = Column(Integer, primary_key=True)
     album_id = Column(Integer, ForeignKey('albums.album_id'), nullable=False)
+    picture = Column(LargeBinary, nullable=True)
 
     tags = relationship("Tags", secondary = 'image_tags')
 

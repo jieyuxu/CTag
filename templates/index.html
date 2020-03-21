@@ -1,1 +1,7 @@
-{{test}}
+
+{% for image in images %}
+
+{{image.picture}}
+<img src="data:image/jpeg;base64{{image.picture}}"/>
+
+{% endfor %}
