@@ -48,7 +48,7 @@ application sending large blobs of data dynamically.
 
 Why not use file system?
 + didn't want to use own disk storage (also not great for Heroku)
-+ best to use aws but non $
++ best to use aws but no $
 + also from some research:
 
 When images are not the only data you store, don't store them on the file
