@@ -22,13 +22,10 @@ def annotate_img_bytestream(bytestream):
 def detect_faces(path):
     client = vision.ImageAnnotatorClient()
 
-    # [START vision_python_migration_face_detection]
-    # [START vision_python_migration_image_file]
     with io.open(path, 'rb') as image_file:
         content = image_file.read()
 
     image = vision.types.Image(content=content)
-    # [END vision_python_migration_image_file]
 
     response = client.face_detection(image=image)
     faces = response.face_annotations
@@ -52,7 +49,6 @@ def detect_faces(path):
     return emotions
 
 
-# [START vision_face_detection_gcs]
 def detect_faces_bytestream(bytestream):
     client = vision.ImageAnnotatorClient()
     
@@ -88,7 +84,6 @@ def detect_faces_bytestream(bytestream):
 def detect_labels(path):
     client = vision.ImageAnnotatorClient()
 
-    # [START vision_python_migration_label_detection]
     with io.open(path, 'rb') as image_file:
         content = image_file.read()
 
