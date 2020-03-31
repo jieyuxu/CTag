@@ -1,8 +1,16 @@
+<!DOCTYPE html>
+<html>
+<body>
 
-{% for image in images %}
+<h1>The input accept attribute</h1>
 
-{{image}}
-{{image.picture}}
-<img src="data:image/jpeg;base64{{image.picture}}"/>
+<form action = "/success" method = "POST" enctype="multipart/form-data">
+  <label for="img">Select image:</label>
+  <input type="file" name="files[]" multiple="true"
+                                    accept="image/jpg image/jpeg image/png image/gif image/tiff" 
+                                    autocomplete="off" required/>
+  <input type="submit">
+</form>
 
-{% endfor %}
+</body>
+</html>
