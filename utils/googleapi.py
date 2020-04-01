@@ -9,8 +9,12 @@ def combine_dict(emotions, labels):
     for l in labels:
         big_dict[l] = labels[l]
         tag_type[l] = 'Label'
+
+    likelihood_name = ['UNKNOWN', 'VERY_UNLIKELY', 'UNLIKELY', 'POSSIBLE',
+                       'LIKELY', 'VERY_LIKELY']
     for e in emotions:
-        big_dict[e] = emotions[e]
+        conf_emot = likelihood_name.index(emotions[e])
+        big_dict[e] = conf_emot
         tag_type[e] = 'Emotions'
 
     return big_dict, tag_type

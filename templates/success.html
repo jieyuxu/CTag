@@ -3,11 +3,16 @@
 <title>success</title>
 </head>
 <body>
-<p>Following Files Uploaded Successfully</p>
+<p>Following Files Uploaded Successfully in Album {{album}}</p>
 {% for key in file_tag %}
 <p>File Name: {{key.filename}}</p>
-<p> Tags, Confidence: {{file_tag[key]}}</p>
-
+      {% for type in file_tag[key] %}
+          Type of Tagging: {{type}} <br><br>
+          {% for line in file_tag[key][type] %}
+              {{line}} <br>
+          {% endfor %}
+          <br>
+      {% endfor %}
 {% endfor %}
 
 </body>

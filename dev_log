@@ -1,7 +1,7 @@
 proposal/ timeline: https://docs.google.com/document/d/1PwHCOXRdCH0rVnoNvRV-OCeNM10QH6NhPCaf7pC7t-Q/edit?usp=sharing
 
 Suki 3/31:
-1) Upload multiple images
+1) Upload multiple images to db with Tags
 
 - does not accept pdf bc extra work to check if it is an image file
 https://stackoverflow.com/questions/55704218/how-to-check-if-pdf-is-scanned-image-or-contains-text
@@ -12,7 +12,11 @@ file uploaded references:
 https://www.javatpoint.com/flask-file-uploading
 https://stackoverflow.com/questions/11817182/uploading-multiple-files-with-flask/52558445
 
+2) 'UNKNOWN', 'VERY_UNLIKELY', 'UNLIKELY', 'POSSIBLE', 'LIKELY', 'VERY_LIKELY'
+ranked 0 - 5
+so each type of tag ranked differently
 ################################################################################
+
 Suki 3/15:
 
 1) Database Schema:

@@ -7,6 +7,9 @@
 Please uploaded images files. We currently don't accept pdf and raw input.
 You may upload multiple images at once.  <br> <br>
 <form action = "/success" method = "POST" enctype="multipart/form-data">
+  <label for="fname">Album name:</label>
+  <input type="text" id="a_name" name="a_name"><br><br>
+
   <label for="img">Select image(s):</label>
   <input type="file" name="files[]" multiple="true"
                                     accept="image/*"

@@ -1,21 +1,9 @@
 from utils.database import *
 from flask_sqlalchemy_session import current_session
 from sqlalchemy import and_
-from os import listdir
 import base64
 
 sess = current_session
-
-# input listdir of images
-# get a list of all the corrupt image files
-# If nothing prints out, all of those image files are good, valid images.
-def detect_corrupt():
-    for filename in listdir('./'):
-        try:
-          img = Image.open('./' + filename) # open the image file
-          img.verify() # verify that it is, in fact an image
-        except (IOError, SyntaxError) as e:
-          print('Bad file:', filename) # print out the names of corrupt files
 
 # get user obj, add user with net-id if not already exist
 def add_add_user(netid):
@@ -28,7 +16,9 @@ def add_add_user(netid):
 
 # make album if not already exist
 def add_get_album(title, user_obj):
-    a = sess.query(Albums).filter(Albums.name == title).first()
+    a = sess.query(Albums)\
+            .filter(and_(Albums.name == title, Albums.net_id == user_obj.net_id))\
+            .first()
     if a is None:
         a = Albums(name=title, user=user_obj)
         sess.add(a)
@@ -46,7 +36,9 @@ def add_get_tagType(type):
 
 # make new tag if not already exist
 def add_get_tag(tag, conf, type_obj):
-    t = sess.query(Tags).filter(and_(Tags.name == tag, Tags.confidence == conf)).first()
+    t = sess.query(Tags)\
+            .filter(and_(Tags.name == tag, Tags.confidence == conf))\
+            .first()
     if t is None:
         t = Tags(name=tag, confidence=conf, type=type_obj)
         sess.add(t)
@@ -93,7 +85,7 @@ def search_by_tag(tag_name):
 def sortConfidence(tag_obj):
     return tag_obj.confidence
 
-def get_tags(img_obj):
+def get_tags_general(img_obj):
     img_tags = sess.query(Image_Tags)\
                  .filter(Image_Tags.image_id == img_obj.image_id)\
                  .all()
@@ -104,3 +96,34 @@ def get_tags(img_obj):
                         .first())
     tags.sort(key=sortConfidence, reverse=True)
     return tags
+
+def get_tags_category(img_obj, type_obj):
+    img_tags = sess.query(Image_Tags)\
+                 .filter(Image_Tags.image_id == img_obj.image_id)\
+                 .all()
+    print(len(img_tags))
+    tags = []
+    for t in img_tags:
+        tags.append(sess.query(Tags)\
+                        .filter(and_(Tags.tag_id == t.tag_id, Tags.tag_type == type_obj))
+                        .first())
+    tags = list(filter(None, tags))
+    tags.sort(key=sortConfidence, reverse=True)
+    return tags
+
+############################################################## other functions #
+
+# change album of an image
+def change_album(image_obj, new_album_obj):
+    image_obj.album_id = new_album_obj.album_id
+    sess.commit()
+    return new_album_obj
+
+# get all tag types for an image
+def get_types_img(img_obj):
+    tags = get_tags_general(img_obj)
+    tag_types = []
+    for t in tags:
+        if t.tag_type not in tag_types:
+            tag_types.append(t.tag_type)
+    return tag_types
