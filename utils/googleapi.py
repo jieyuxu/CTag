@@ -3,21 +3,31 @@
 from google.cloud import vision
 import io
 
+def combine_dict(emotions, labels):
+    tag_type = {}
+    big_dict = {}
+    for l in labels:
+        big_dict[l] = labels[l]
+        tag_type[l] = 'Label'
+    for e in emotions:
+        big_dict[e] = emotions[e]
+        tag_type[e] = 'Emotions'
+
+    return big_dict, tag_type
+
 def annotate_img_path(filename):
     emotions = detect_faces(filename)
     labels = detect_labels(filename)
 
-    # for testing 
-    print(emotions, labels)
-
-    return emotions.update(labels)
+    # print(emotions, labels)
+    return combine_dict(emotions, labels)
 
 def annotate_img_bytestream(bytestream):
     emotions = detect_faces_bytestream(bytestream)
     labels = detect_labels_bytestream(bytestream)
 
-    print(emotions, labels)
-    return emotions.update(labels)
+    # print(emotions, labels)
+    return combine_dict(emotions, labels)
 
 def detect_faces(path):
     client = vision.ImageAnnotatorClient()
@@ -51,7 +61,7 @@ def detect_faces(path):
 
 def detect_faces_bytestream(bytestream):
     client = vision.ImageAnnotatorClient()
-    
+
     image = vision.types.Image(content=bytestream)
 
     response = client.face_detection(image=image)
@@ -60,7 +70,7 @@ def detect_faces_bytestream(bytestream):
     # Names of likelihood from google.cloud.vision.enums
     likelihood_name = ('UNKNOWN', 'VERY_UNLIKELY', 'UNLIKELY', 'POSSIBLE',
                        'LIKELY', 'VERY_LIKELY')
-    print('Faces:')
+    # print('Faces:')
     emotions = {}
     for face in faces:
         # print('anger: {}'.format(likelihood_name[face.anger_likelihood]))
@@ -77,7 +87,7 @@ def detect_faces_bytestream(bytestream):
             '{}\nFor more info on error messages, check: '
             'https://cloud.google.com/apis/design/errors'.format(
                 response.error.message))
-    
+
     return emotions
 
 
@@ -91,7 +101,7 @@ def detect_labels(path):
 
     response = client.label_detection(image=image)
     labels = response.label_annotations
-    
+
 
     label_set = {}
     for label in labels:
@@ -121,5 +131,5 @@ def detect_labels_bytestream(bytestream):
             '{}\nFor more info on error messages, check: '
             'https://cloud.google.com/apis/design/errors'.format(
                 response.error.message))
-    
+
     return label_set

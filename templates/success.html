@@ -3,9 +3,12 @@
 <title>success</title>
 </head>
 <body>
-<p>File uploaded successfully</p>
-{% for f in files %}
-<p>File Name: {{f.filename}}</p>
+<p>Following Files Uploaded Successfully</p>
+{% for key in file_tag %}
+<p>File Name: {{key.filename}}</p>
+<p> Tags, Confidence: {{file_tag[key]}}</p>
+
 {% endfor %}
+
 </body>
 </html>

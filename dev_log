@@ -3,8 +3,6 @@ proposal/ timeline: https://docs.google.com/document/d/1PwHCOXRdCH0rVnoNvRV-OCeN
 Suki 3/31:
 1) Upload multiple images
 
-- accept="image/jpg image/jpeg image/png image/gif image/tiff"
-
 - does not accept pdf bc extra work to check if it is an image file
 https://stackoverflow.com/questions/55704218/how-to-check-if-pdf-is-scanned-image-or-contains-text
 

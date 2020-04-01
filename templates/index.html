@@ -2,12 +2,14 @@
 <html>
 <body>
 
-<h1>The input accept attribute</h1>
+<h1>Image Upload</h1>
 
+Please uploaded images files. We currently don't accept pdf and raw input.
+You may upload multiple images at once.  <br> <br>
 <form action = "/success" method = "POST" enctype="multipart/form-data">
-  <label for="img">Select image:</label>
+  <label for="img">Select image(s):</label>
   <input type="file" name="files[]" multiple="true"
-                                    accept="image/jpg image/jpeg image/png image/gif image/tiff" 
+                                    accept="image/*"
                                     autocomplete="off" required/>
   <input type="submit">
 </form>
