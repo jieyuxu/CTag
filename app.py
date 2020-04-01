@@ -9,6 +9,19 @@ sess = flask_scoped_session(session_factory, app)
 
 @app.route('/')
 def index():
+    netid = "sukiy"
+    user_obj = add_add_user(netid)
+    album_obj= add_get_album("HELLO WORLD", user_obj)
+    new_obj= add_get_album("little red", user_obj)
+
+    with open("photo.jpeg", "rb") as image:
+      f = base64.b64encode(image.read())
+
+    img1 = Images(album=album_obj, picture=f)
+    change_album(img1, new_obj)
+
+
+    test = images_album(album_obj)
     return render_template("index.html")
 
 @app.route('/success', methods = ['POST'])

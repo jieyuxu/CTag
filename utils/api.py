@@ -85,6 +85,7 @@ def search_by_tag(tag_name):
 def sortConfidence(tag_obj):
     return tag_obj.confidence
 
+# no categories
 def get_tags_general(img_obj):
     img_tags = sess.query(Image_Tags)\
                  .filter(Image_Tags.image_id == img_obj.image_id)\
@@ -94,14 +95,15 @@ def get_tags_general(img_obj):
         tags.append(sess.query(Tags)\
                         .filter(Tags.tag_id == t.tag_id)
                         .first())
+    tags = list(filter(None, tags))
     tags.sort(key=sortConfidence, reverse=True)
     return tags
 
+# by category
 def get_tags_category(img_obj, type_obj):
     img_tags = sess.query(Image_Tags)\
                  .filter(Image_Tags.image_id == img_obj.image_id)\
                  .all()
-    print(len(img_tags))
     tags = []
     for t in img_tags:
         tags.append(sess.query(Tags)\
@@ -113,12 +115,6 @@ def get_tags_category(img_obj, type_obj):
 
 ############################################################## other functions #
 
-# change album of an image
-def change_album(image_obj, new_album_obj):
-    image_obj.album_id = new_album_obj.album_id
-    sess.commit()
-    return new_album_obj
-
 # get all tag types for an image
 def get_types_img(img_obj):
     tags = get_tags_general(img_obj)
@@ -127,3 +123,16 @@ def get_types_img(img_obj):
         if t.tag_type not in tag_types:
             tag_types.append(t.tag_type)
     return tag_types
+
+# change album of an image
+def change_album(image_obj, new_album_obj):
+    image_obj.album = new_album_obj
+    sess.commit()
+
+# get image objs in album
+def images_album(album_obj):
+    images = sess.query(Images)\
+                .filter(Images.album == album_obj)\
+                .all()
+    print(len(images))
+    return images
