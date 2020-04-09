@@ -26,9 +26,6 @@ def isLoggedIn():
         return True
     return False
 
-with open("photo.jpg", "rb") as image:
-    f = base64.b64encode(image.read())
-
 @app.route('/')
 @app.route('/signin')
 def signin():
