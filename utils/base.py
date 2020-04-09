@@ -6,7 +6,7 @@ import pgpasslib
 
 Base = declarative_base()
 
-password = pgpasslib.getpass('localhost', 5555, 'qroom', 'postgres')
+# password = pgpasslib.getpass('localhost', 5555, 'qroom', 'postgres')
 # if not password:
 #     raise ValueError('Did not find a password in the .pgpass file')
 #
