@@ -41,6 +41,7 @@ def caslogin():
       session['username'] = cas.username
       print("confirming user logged into session", session['username'])
       session.modified = True
+      add_add_user(cas.username)
    return render_template("index.html")
 
 @app.route('/caslogout')
@@ -54,73 +55,85 @@ def caslogout():
 
 @app.route('/index.html')
 def index():
-  return render_template("index.html")
+  if isLoggedIn():
+      return render_template("index.html")
+  return render_template("signin.html")
 
 # add images
 @app.route('/success', methods = ['POST'])
 def success():
-    netid = "sukiy"
-    user_obj = add_add_user(netid)
-    if request.method == 'POST':
-        album = request.form['a_name']
-        album_obj= add_get_album(album, user_obj)
+    if isLoggedIn():
+        netid = "sukiy"
+        user_obj = add_add_user(netid)
+        if request.method == 'POST':
+            album = request.form['a_name']
+            album_obj= add_get_album(album, user_obj)
 
-        files = request.files.getlist("files[]")
-        file_tag = {}
-        for f in files:
-            # add image to db
-            bytes = f.read()
-            tags, d_types = annotate_img_bytestream(bytes)
-            img_obj = add_image(bytes, album_obj, tags, d_types)
+            files = request.files.getlist("files[]")
+            file_tag = {}
+            for f in files:
+                # add image to db
+                bytes = f.read()
+                tags, d_types = annotate_img_bytestream(bytes)
+                img_obj = add_image(bytes, album_obj, tags, d_types)
 
-            type_tags = img_tags_all_category(img_obj)
-            file_tag[f] = type_tags
+                type_tags = img_tags_all_category(img_obj)
+                file_tag[f] = type_tags
 
-        return render_template("success.html", album = album, file_tag = file_tag)
+            return render_template("success.html", album = album, file_tag = file_tag)
+    return render_template("signin.html")
 
 @app.route('/all_tags')
 def all_tags():
-    tags = get_all_tags()
-    return render_template("all_tags.html", tags = tags)
+    if isLoggedIn():
+        tags = get_all_tags()
+        return render_template("all_tags.html", tags = tags)
+    return render_template("signin.html")
 
 @app.route('/search', methods = ['POST'])
 def search():
-    if request.method == 'POST':
-        search = request.form['search']
-        if search is '':
-            return render_template("index.html")
-        input = search.split(',')
-        tags = {}
-        albums = []
-        reject = []
-        for i in input:
-            i = i.strip()
-            t = False
-            a = False
-            if is_tag(i):
-                tags[i] = tag_num_img(i)
-                t = True
-            if is_album(i):
-                albums.append(i)
-                a = True
-            if not a and not t:
-                reject.append(i)
-        return render_template("search.html", search=search, tags=tags,
+    if isLoggedIn():
+        if request.method == 'POST':
+            search = request.form['search']
+            if search is '':
+                return render_template("index.html")
+            input = search.split(',')
+            tags = {}
+            albums = []
+            reject = []
+            for i in input:
+                i = i.strip()
+                t = False
+                a = False
+                if is_tag(i):
+                    tags[i] = tag_num_img(i)
+                    t = True
+                if is_album(i):
+                    albums.append(i)
+                    a = True
+                if not a and not t:
+                    reject.append(i)
+            return render_template("search.html", search=search, tags=tags,
                                               albums=albums, reject=reject)
+    return render_template("signin.html")
 
 @app.route('/image')
 def image():
-    id = request.args.get('img')
-    img_obj = img_obj_id(id)
-    album = album_obj_id(img_obj.album_id)
-    type_tags = img_tags_all_category(img_obj)
-    return render_template("image.html", image = image, album = album, type_tags = type_tags)
+    if isLoggedIn():
+        id = request.args.get('img')
+        img_obj = img_obj_id(id)
+        album = album_obj_id(img_obj.album_id)
+        type_tags = img_tags_all_category(img_obj)
+        return render_template("image.html", image = image, album = album, type_tags = type_tags)
+    return render_template("signin.html")
 
 @app.route('/tag')
 def tag():
-    tag_name = request.args.get('tag_name')
-    images = search_by_tag(tag_name)
-    return render_template("tag.html", search = tag_name, images = images)
+    if isLoggedIn():
+        tag_name = request.args.get('tag_name')
+        images = search_by_tag(tag_name)
+        return render_template("tag.html", search = tag_name, images = images)
+    return render_template("signin.html")
 
 if __name__ == '__main__':
    app.run(host='0.0.0.0', port=8000, debug = True)
