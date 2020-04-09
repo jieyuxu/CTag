@@ -1,19 +1,17 @@
-<html>
-<head>
-<title>success</title>
-</head>
-<body>
-<p>Following Files Uploaded Successfully in Album {{album}}</p>
+{% extends 'base.html' %}
+{% block dashboard_home %}
+<div class="container-fluid">
+<h1> <center> Successful Upload to Album <br> {{album}} </center></h1>
 {% for key in file_tag %}
 <p>File Name: {{key.filename}}</p>
       {% for type in file_tag[key] %}
-          Type of Tagging: {{type}} <br><br>
+          {{type}} <br>
           {% for line in file_tag[key][type] %}
-              {{line}} <br>
+              <a href="/tag?tag_name={{line[0]}}"> {{line[0]}}</a> (Confidence: {{line[1]}}%) <br>
           {% endfor %}
           <br>
       {% endfor %}
 {% endfor %}
 
-</body>
-</html>
+</div>
+{% endblock %}

@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block dashboard_home %}
+<div class="container-fluid">
+
+<h1> Album: {{album.name}} </h1><br>
+<img src="data:;base64,{{ image.picture }}"/>
+
+{% for type in type_tags %}
+    <h3> {{type}} </h3> <br>
+    {% for line in type_tags[type] %}
+        <a href="/tag?tag_name={{line[0]}}"> {{line[0]}}</a> (Confidence: {{line[1]}}%) <br>
+    {% endfor %}
+    <br>
+{% endfor %}
+
+<h3> Related Images </h3>
+
+</div>
+{% endblock %}

@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block dashboard_home %}
+<div class="container-fluid">
+
+{% if images is none %}
+    Sorry, there are currently no images with that tag.
+{% else %}
+
+    <h1> {{images|length}} Images for {{search}} </h1> <br>
+
+    {% for key in images %}
+    <a href="/image?img={{key.image_id}}">
+    <img src="data:;base64,{{ key.picture }}"/>
+    </a>
+    Confidence: {{ images[key] }}% <br>
+    {% endfor %}
+
+{% endif %}
+
+</div>
+{% endblock %}

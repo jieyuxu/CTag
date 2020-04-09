@@ -60,32 +60,11 @@ def add_image(bytes, album, tags=None, tag_type=None):
 
 ######################################################## sorting and searching #
 
-# input array of image_tag objects, get array of image objects
-def imgtg_to_img(array):
-    images = []
-    for i in array:
-        images.append(sess.query(Images)\
-                            .filter(Images.image_id == i.image_id)
-                            .first())
-    return images
-
-# get all images with tag name in descending confidence, returns image objects
-def search_by_tag(tag_name):
-    tags = sess.query(Tags)\
-                .filter(Tags.name == tag_name)\
-                .order_by(Tags.confidence.desc())\
-                .all()
-    for t in tags:
-        images = sess.query(Image_Tags)\
-                     .filter(Image_Tags.tag_id == t.tag_id)\
-                     .all()
-    return imgtg_to_img(images)
-
 # from an image object, get all tags by desc confidence
 def sortConfidence(tag_obj):
     return tag_obj.confidence
 
-# no categories
+# from image, get tags: no categories
 def get_tags_general(img_obj):
     img_tags = sess.query(Image_Tags)\
                  .filter(Image_Tags.image_id == img_obj.image_id)\
@@ -99,8 +78,8 @@ def get_tags_general(img_obj):
     tags.sort(key=sortConfidence, reverse=True)
     return tags
 
-# by category
-def get_tags_category(img_obj, type_obj):
+# from image, get tags in one category
+def img_tags_one_category(img_obj, type_obj):
     img_tags = sess.query(Image_Tags)\
                  .filter(Image_Tags.image_id == img_obj.image_id)\
                  .all()
@@ -113,6 +92,61 @@ def get_tags_category(img_obj, type_obj):
     tags.sort(key=sortConfidence, reverse=True)
     return tags
 
+def img_tags_all_category(img_obj):
+    types = get_types_img(img_obj) # all tag types in the image
+    type_tags = {} # dict of all tags per type
+
+    # sort tags by category by confidence
+    for ty in types:
+        tag_objs = img_tags_one_category(img_obj, ty)
+        sorted_tags = []
+        for t in tag_objs:
+            sorted_tags.append([t.name, t.confidence])
+        type_tags[ty] = sorted_tags
+
+    return type_tags
+
+# get img obj from img id
+def img_obj_id(id):
+    img = sess.query(Images)\
+                .filter(Images.image_id == id)\
+                .first()
+    return img
+
+# input array of image_tag objects, get array of image objects
+def imgtg_to_img(array):
+    images = []
+    for i in array:
+        images.append(img_obj_id(i.image_id))
+    return images
+
+# get confidence of img from tag_name
+def get_confidence(img_obj, tag_name):
+    tags = get_tags_general(img_obj)
+    for t in tags:
+        if t.name == tag_name:
+            return t.confidence
+    return 0
+
+# get all images with tag name in descending get_confidence
+# returns dict of image objects to confidence
+def search_by_tag(tag_name):
+    tags = sess.query(Tags)\
+                .filter(Tags.name == tag_name)\
+                .order_by(Tags.confidence.desc())\
+                .all()
+    if len(tags) == 0:
+        return None
+    for t in tags:
+        images = sess.query(Image_Tags)\
+                     .filter(Image_Tags.tag_id == t.tag_id)\
+                     .all()
+    match_images = imgtg_to_img(images)
+    dict = {}
+    for m in match_images:
+        dict[m] = get_confidence(m, tag_name)
+    return dict
+
 ############################################################## other functions #
 
 # get all tag types for an image
@@ -124,6 +158,13 @@ def get_types_img(img_obj):
             tag_types.append(t.tag_type)
     return tag_types
 
+# get album by id
+def album_obj_id(id):
+    album = sess.query(Albums)\
+                .filter(Albums.album_id == id)\
+                .first()
+    return album
+
 # change album of an image
 def change_album(image_obj, new_album_obj):
     image_obj.album = new_album_obj
@@ -134,5 +175,42 @@ def images_album(album_obj):
     images = sess.query(Images)\
                 .filter(Images.album == album_obj)\
                 .all()
-    print(len(images))
     return images
+
+# num of images with tag
+def tag_num_img(name):
+    search = sess.query(Tags)\
+                .filter(Tags.name == name)\
+                .all()
+    for t in search:
+        images = sess.query(Image_Tags)\
+                     .filter(Image_Tags.tag_id == t.tag_id)\
+                     .all()
+    match_images = imgtg_to_img(images)
+    return len(match_images)
+
+# get all tags and num of images that contains that tag
+def get_all_tags():
+    tags = {}
+    objs = sess.query(Tags).all()
+    for o in objs:
+        name = o.name
+        if name not in tags:
+            tags[name] = tag_num_img(name)
+    return sorted(tags.items(), key=lambda x: x[1], reverse=True)
+
+def is_tag(tag_name):
+    tags = sess.query(Tags)\
+                .filter(Tags.name == tag_name)\
+                .all()
+    if len(tags) == 0:
+        return False
+    return True
+
+def is_album(album_name):
+    album = sess.query(Albums)\
+                .filter(Albums.name == album_name)\
+                .all()
+    if len(album) == 0:
+        return False
+    return True
