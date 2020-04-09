@@ -13,8 +13,8 @@ Base = declarative_base()
 # url = 'postgresql://postgres:{}@localhost:5555/iw_s20'.format(password)
 
 
-# url = 'postgresql://localhost/iw_s20'
-url = os.environ['DATABASE_URL']
+url = 'postgresql://localhost/iw_s20'
+# url = os.environ['DATABASE_URL']
 
 engine = create_engine(url)
 session_factory = sessionmaker(bind=engine)
