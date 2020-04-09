@@ -8,6 +8,14 @@ Suki 4/9:
 4) image pg
 
 ################################################################################
+Amy 04/3:
+(update from before--forgot date)
+1) wrote library to tag images in googleapi.py 
+
+(current update)
+1) designed the interface
+2) added templates and required css/js support files 
+
 
 Suki 3/31:
 1) Upload multiple images to db with Tags

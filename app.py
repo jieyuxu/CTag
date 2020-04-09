@@ -22,9 +22,12 @@ app.config['CAS_LOGIN_ROUTE'] = '/cas'
 #########################################
 
 def isLoggedIn():
-   if 'username' in session:
-      return True
-   return False
+    if 'username' in session:
+        return True
+    return False
+
+with open("photo.jpg", "rb") as image:
+    f = base64.b64encode(image.read())
 
 @app.route('/')
 @app.route('/signin')
