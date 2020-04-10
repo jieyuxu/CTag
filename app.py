@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, send_file
 from flask import session, Response
 from flask_sqlalchemy_session import flask_scoped_session
 from utils.base import session_factory
@@ -7,6 +7,7 @@ from utils.googleapi import *
 from base64 import b64encode
 from CAS import CAS, login
 from CAS import login_required
+from s3 import list_files, upload_file
 
 
 app = Flask(__name__)
@@ -19,15 +20,19 @@ app.config['CAS_SERVER'] = "https://fed.princeton.edu/cas/login"
 app.config['CAS_AFTER_LOGIN'] = 'caslogin'
 app.config['CAS_AFTER_LOGOUT'] = 'http://localhost:8000/caslogout'
 app.config['CAS_LOGIN_ROUTE'] = '/cas'
-#########################################
+################# AWS ####################
+UPLOAD_FOLDER = "uploads"
+BUCKET = "iw-spring"
+
+
 
 def isLoggedIn():
     if 'username' in session:
         return True
     return False
 
-with open("photo.jpg", "rb") as image:
-    f = base64.b64encode(image.read())
+# with open("photo.jpg", "rb") as image:
+#     f = base64.b64encode(image.read())
 
 @app.route('/')
 @app.route('/signin')
@@ -126,8 +131,8 @@ def image():
         id = request.args.get('img')
         img_obj = img_obj_id(id)
         album = album_obj_id(img_obj.album_id)
-        type_tags = img_tags_all_category(img_obj)
-        return render_template("image.html", image = image, album = album, type_tags = type_tags)
+        type_tags = img_tags_all_category(img_obj)        
+        return render_template("image.html", id = id, album = album, type_tags = type_tags)
     return render_template("signin.html")
 
 @app.route('/tag')
