@@ -24,8 +24,6 @@ app.config['CAS_LOGIN_ROUTE'] = '/cas'
 UPLOAD_FOLDER = "uploads"
 BUCKET = "iw-spring"
 
-
-
 def isLoggedIn():
     if 'username' in session:
         return True
@@ -73,9 +71,12 @@ def success():
         if request.method == 'POST':
             album = request.form['a_name']
             album_obj= add_get_album(album, user_obj)
-
+            
             files = request.files.getlist("files[]")
             file_tag = {}
+            
+            print(request.files)
+            print(files)
             for f in files:
                 # add image to db
                 bytes = f.read()
@@ -85,8 +86,8 @@ def success():
                 type_tags = img_tags_all_category(img_obj)
                 file_tag[f] = type_tags
                 
-                # f.save(f.filename)
-                # upload_file(f"{f.filename}", BUCKET)
+                f.save(f.filename)
+                upload_file(f"{f.filename}", BUCKET)
 
             return render_template("success.html", album = album, file_tag = file_tag)
     return render_template("signin.html")
@@ -132,7 +133,7 @@ def image():
         img_obj = img_obj_id(id)
         album = album_obj_id(img_obj.album_id)
         type_tags = img_tags_all_category(img_obj)        
-        return render_template("image.html", id = id, album = album, type_tags = type_tags)
+        return render_template("image.html", image = img, album = album, type_tags = type_tags)
     return render_template("signin.html")
 
 @app.route('/tag')
@@ -143,5 +144,5 @@ def tag():
         return render_template("tag.html", search = tag_name, images = images)
     return render_template("signin.html")
 #
-if __name__ == '__main__':
-   app.run(host='0.0.0.0', port=8000, debug = True)
+if __name__ == '__main__':    
+    app.run(host='0.0.0.0', port=8000, debug = True)
