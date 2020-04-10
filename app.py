@@ -84,6 +84,9 @@ def success():
 
                 type_tags = img_tags_all_category(img_obj)
                 file_tag[f] = type_tags
+                
+                # f.save(f.filename)
+                # upload_file(f"{f.filename}", BUCKET)
 
             return render_template("success.html", album = album, file_tag = file_tag)
     return render_template("signin.html")
