@@ -31,9 +31,6 @@ def isLoggedIn():
         return True
     return False
 
-# with open("photo.jpg", "rb") as image:
-#     f = base64.b64encode(image.read())
-
 @app.route('/')
 @app.route('/signin')
 def signin():
@@ -142,6 +139,6 @@ def tag():
         images = search_by_tag(tag_name)
         return render_template("tag.html", search = tag_name, images = images)
     return render_template("signin.html")
-
+#
 if __name__ == '__main__':
    app.run(host='0.0.0.0', port=8000, debug = True)
