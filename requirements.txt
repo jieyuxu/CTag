@@ -4,6 +4,10 @@ google-cloud-storage
 gunicorn== 19.9.0
 setuptools==40.3.0
 Flask==1.1.1
+<<<<<<< HEAD
+=======
+Flask-CAS==1.0.1
+>>>>>>> cc0c1ec30fadb81df9218d5a735da060771397c7
 flask-heroku==0.1.9
 Flask-Mail==0.9.1
 Flask-Migrate==2.5.2
