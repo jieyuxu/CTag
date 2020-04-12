@@ -6,7 +6,7 @@ import base64
 sess = current_session
 
 # get user obj, add user with net-id if not already exist
-def add_add_user(netid):
+def add_get_user(netid):
     user = sess.query(Users).filter(Users.net_id == netid).first()
     if user is None:
         user = Users(net_id=netid)
@@ -214,3 +214,10 @@ def is_album(album_name):
     if len(album) == 0:
         return False
     return True
+
+def get_all_albums(user):
+    a = sess.query(Albums)\
+            .filter(Albums.net_id == user)\
+            .all()
+
+    return a
