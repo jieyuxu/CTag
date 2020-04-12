@@ -194,10 +194,13 @@ def get_search_albums(album_name, netid):
     return album
 
 def get_all_albums(user):
-    a = sess.query(Albums)\
+    albums = {}
+    query = sess.query(Albums)\
             .filter(Albums.net_id == user)\
             .all()
-    return a
+    for q in query:
+        albums[q.name] = len(images_album(q))
+    return albums
 ####################################################################### others #
 
 # get all tags and num of images that contains that tag
