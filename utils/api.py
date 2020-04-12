@@ -46,8 +46,8 @@ def add_get_tag(tag, conf, type_obj):
     return t
 
 # add image to db, tags is dict [tag:conf], tag type is dict [tag:type]
-def add_image(bytes, album, tags=None, tag_type=None):
-    image = Images(album=album, picture=bytes)
+def add_image(album, url, tags=None, tag_type=None):
+    image = Images(album=album, url=url)
     if tags is not None:
         for t in tags:
             type_obj = add_get_tagType(tag_type[t])

@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, send_file
+from flask import Flask, render_template, request, send_file, redirect
 from flask import session, Response
 from flask_sqlalchemy_session import flask_scoped_session
 from utils.base import session_factory
@@ -7,8 +7,9 @@ from utils.googleapi import *
 from base64 import b64encode
 from CAS import CAS, login
 from CAS import login_required
-from s3 import list_files, upload_file
-
+from s3 import list_files, upload_file, upload_file_to_s3
+from werkzeug.utils import secure_filename
+import os
 
 app = Flask(__name__)
 app.secret_key = 'bdfa8a83f16eb4f95dc2473fe4a50820b14e74cc70cef6ae'
@@ -56,39 +57,50 @@ def caslogout():
       session.modified = True
    return render_template("signin.html")
 
-@app.route('/index.html')
+@app.route('/index')
 def index():
   if isLoggedIn():
       return render_template("index.html")
   return render_template("signin.html")
 
+@app.route("/upload", methods=['POST'])
+def upload():
+    if request.method == "POST":
+        f = request.files.getlist('files[]')
+        print(f)
+        for file in f:
+            file.save(file.filename)
+            upload_file(f"{file.filename}", BUCKET)
+
+        return redirect("/index")
+
 # add images
 @app.route('/success', methods = ['POST'])
 def success():
     if isLoggedIn():
-        netid = "sukiy"
+        netid = "jyxu"
         user_obj = add_add_user(netid)
         if request.method == 'POST':
-            album = request.form['a_name']
+            album = "hello"
             album_obj= add_get_album(album, user_obj)
             
-            files = request.files.getlist("files[]")
+            files = request.files.getlist("file")
             file_tag = {}
-            
-            print(request.files)
-            print(files)
             for f in files:
+                # upload file to aws
+                f.save(f.filename)
+                upload_file(f"{f.filename}", BUCKET)
+                link = "https://iw-spring.s3.amazonaws.com/%s" % f.filename
+                # os.remove(f.filename)
+
                 # add image to db
-                bytes = f.read()
-                tags, d_types = annotate_img_bytestream(bytes)
-                img_obj = add_image(bytes, album_obj, tags, d_types)
+                content = f.read()
+                tags, d_types = annotate_img_bytestream(content)
+                img_obj = add_image(album_obj, link, tags, d_types)
 
                 type_tags = img_tags_all_category(img_obj)
                 file_tag[f] = type_tags
                 
-                f.save(f.filename)
-                upload_file(f"{f.filename}", BUCKET)
-
             return render_template("success.html", album = album, file_tag = file_tag)
     return render_template("signin.html")
 

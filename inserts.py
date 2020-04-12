@@ -17,15 +17,15 @@ truck = Tags(name='truck', confidence=50, type=object)
 happy = Tags(name='happy', confidence=70, type=sentiment)
 
 
-with open("photo.jpeg", "rb") as image:
-  f = base64.b64encode(image.read())
+# with open("photo.jpg", "rb") as image:
+#   f = base64.b64encode(image.read())
 
-img1 = Images(album=aiwl, picture=f)
-img2 = Images(album=lrrh, picture=f)
+# img1 = Images(album=aiwl, url="")
+# img2 = Images(album=lrrh, picture=f)
 
-img1.tags.append(truck)
-img1.tags.append(happy)
-img2.tags.append(truck)
+# img1.tags.append(truck)
+# img1.tags.append(happy)
+# img2.tags.append(truck)
 
 sess = session_factory()
 sess.add(amy)
@@ -35,8 +35,8 @@ sess.add(sentiment)
 sess.add(object)
 sess.add(truck)
 sess.add(happy)
-sess.add(img1)
-sess.add(img2)
+# sess.add(img1)
+# sess.add(img2)
 
 sess.commit()
 sess.close()

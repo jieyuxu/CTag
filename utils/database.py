@@ -24,6 +24,7 @@ class Images(Base):
     image_id = Column(Integer, primary_key=True)
     album_id = Column(Integer, ForeignKey('albums.album_id'), nullable=False)
     picture = Column(LargeBinary, nullable=True)
+    url = Column(String, nullable=False)
 
     tags = relationship("Tags", secondary = 'image_tags')
 
