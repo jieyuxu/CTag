@@ -3,8 +3,7 @@
 <div class="container-fluid">
 
 <h1> Album: {{album.name}} </h1><br>
-<img src="data:;base64,{{ image.picture }}"/>
-
+<img src="{{ image }}"/>
 {% for type in type_tags %}
     <h3> {{type}} </h3> <br>
     {% for line in type_tags[type] %}
