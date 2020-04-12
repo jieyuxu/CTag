@@ -45,7 +45,7 @@ def caslogin():
       session['username'] = cas.username
       print("confirming user logged into session", session['username'])
       session.modified = True
-      add_add_user(cas.username)
+      add_get_user(cas.username)
    return render_template("index.html")
 
 @app.route('/caslogout')
@@ -60,28 +60,19 @@ def caslogout():
 @app.route('/index')
 def index():
   if isLoggedIn():
-      return render_template("index.html")
+      albums = get_all_albums(session['username'])
+      return render_template("index.html", albums=albums)
   return render_template("signin.html")
-
-@app.route("/upload", methods=['POST'])
-def upload():
-    if request.method == "POST":
-        f = request.files.getlist('files[]')
-        print(f)
-        for file in f:
-            file.save(file.filename)
-            upload_file(f"{file.filename}", BUCKET)
-
-        return redirect("/index")
 
 # add images
 @app.route('/success', methods = ['POST'])
 def success():
     if isLoggedIn():
-        netid = "jyxu"
-        user_obj = add_add_user(netid)
+        # netid = "jyxu"
+        print(session['username'])
+        user_obj = add_get_user(session['username'])
         if request.method == 'POST':
-            album = "hello"
+            album = request.form['a_name']
             album_obj= add_get_album(album, user_obj)
             
             files = request.files.getlist("file")
