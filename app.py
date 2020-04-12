@@ -9,7 +9,6 @@ from CAS import CAS, login
 from CAS import login_required
 from s3 import list_files, upload_file
 from werkzeug.utils import secure_filename
-import os
 
 app = Flask(__name__)
 app.secret_key = 'bdfa8a83f16eb4f95dc2473fe4a50820b14e74cc70cef6ae'
@@ -71,20 +70,26 @@ def success():
         # netid = "jyxu"
         print(session['username'])
         user_obj = add_get_user(session['username'])
+        non_valid = []
         if request.method == 'POST':
             album = request.form['a_name']
             album_obj= add_get_album(album, user_obj)
-            
+
             files = request.files.getlist("file")
             file_tag = {}
             # links = []
             for f in files:
+                valid = check_size(f.read())
+                if not valid:
+                    non_valid.append(f.read())
+                    continue
+
                 # upload file to aws
                 f.save(f.filename)
                 upload_file(f"{f.filename}", BUCKET)
                 link = "https://iw-spring.s3.amazonaws.com/uploads/%s" % f.filename
                 # links.append(link)
-                
+
                 f.seek(0)
                 content = f.read()
                 tags, d_types = annotate_img_bytestream(content)
@@ -93,14 +98,14 @@ def success():
                 type_tags = img_tags_all_category(img_obj)
                 file_tag[f] = type_tags
 
-                os.remove(f.filename)                
-            return render_template("success.html", album = album, file_tag = file_tag)
+                os.remove(f.filename)
+            return render_template("success.html", album = album, file_tag = file_tag, non_valid = non_valid)
     return render_template("signin.html")
 
 @app.route('/all_tags')
 def all_tags():
     if isLoggedIn():
-        tags = get_all_tags()
+        tags = get_all_tags(session['username'])
         return render_template("all_tags.html", tags = tags)
     return render_template("signin.html")
 
@@ -137,8 +142,8 @@ def image():
         id = request.args.get('img')
         img_obj = img_obj_id(id)
         album = album_obj_id(img_obj.album_id)
-        type_tags = img_tags_all_category(img_obj) 
-        print(img_obj.url)       
+        type_tags = img_tags_all_category(img_obj)
+        print(img_obj.url)
         return render_template("image.html", image = img_obj.url, album = album, type_tags = type_tags)
     return render_template("signin.html")
 
@@ -146,9 +151,9 @@ def image():
 def tag():
     if isLoggedIn():
         tag_name = request.args.get('tag_name')
-        images = search_by_tag(tag_name)
+        images = search_by_tag(tag_name, session['username'])
         return render_template("tag.html", search = tag_name, images = images)
     return render_template("signin.html")
 #
-if __name__ == '__main__':    
+if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8000, debug = True)

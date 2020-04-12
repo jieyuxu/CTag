@@ -1,17 +1,28 @@
 {% extends 'base.html' %}
 {% block dashboard_home %}
 <div class="container-fluid">
-<h1> <center> Successful Upload to Album <br> {{album}} </center></h1>
-{% for key in file_tag %}
-<p>File Name: {{key.filename}}</p>
-      {% for type in file_tag[key] %}
-          {{type}} <br>
-          {% for line in file_tag[key][type] %}
-              <a href="/tag?tag_name={{line[0]}}"> {{line[0]}}</a> (Confidence: {{line[1]}}%) <br>
-          {% endfor %}
-          <br>
+
+{% if non_valid|length != 0 %}
+      <h1> <center> Unsuccessful Upload to Album <br> {{album}} </center></h1>
+      The following files could not be uploaded (please check file size):
+      {% for i in non_valid %}
+          {{i}}
       {% endfor %}
-{% endfor %}
+{% endif %}
+
+{% if file_tag|length != 0 %}
+      <h1> <center> Successful Upload to Album <br> {{album}} </center></h1>
+      {% for key in file_tag %}
+      <p>File Name: {{key.filename}}</p>
+            {% for type in file_tag[key] %}
+                {{type}} <br>
+                {% for line in file_tag[key][type] %}
+                    <a href="/tag?tag_name={{line[0]}}"> {{line[0]}}</a> (Confidence: {{line[1]}}%) <br>
+                {% endfor %}
+                <br>
+            {% endfor %}
+      {% endfor %}
+{% endif %}
 
 </div>
 {% endblock %}

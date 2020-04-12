@@ -1,5 +1,14 @@
 proposal/ timeline: https://docs.google.com/document/d/1PwHCOXRdCH0rVnoNvRV-OCeNM10QH6NhPCaf7pC7t-Q/edit?usp=sharing
 
+Suki 4/12:
+
+- got primary training data
+- made tags user-specific // incr. efficiency
+- added check for file size
+
+** limitation: duplicate images
+
+###############################################################################
 Amy 4/11:
 1) AWS fully integrated
 2) Images now renderable on site -- though size adjustments still necessary (but some html will fix that)
@@ -15,12 +24,13 @@ Suki 4/9:
 ################################################################################
 Amy 04/3:
 (update from before--forgot date)
-1) wrote library to tag images in googleapi.py 
+1) wrote library to tag images in googleapi.py
 
 (current update)
 1) designed the interface
-2) added templates and required css/js support files 
+2) added templates and required css/js support files
 
+################################################################################
 
 Suki 3/31:
 1) Upload multiple images to db with Tags
@@ -39,8 +49,8 @@ ranked 0 - 5
 so each type of tag ranked differently
 
 3) change album
-################################################################################
 
+################################################################################
 Suki 3/15:
 
 1) Database Schema:

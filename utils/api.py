@@ -2,6 +2,7 @@ from utils.database import *
 from flask_sqlalchemy_session import current_session
 from sqlalchemy import and_
 import base64
+import os
 
 sess = current_session
 
@@ -92,6 +93,15 @@ def img_tags_one_category(img_obj, type_obj):
     tags.sort(key=sortConfidence, reverse=True)
     return tags
 
+# get all tag types for an image
+def get_types_img(img_obj):
+    tags = get_tags_general(img_obj)
+    tag_types = []
+    for t in tags:
+        if t.tag_type not in tag_types:
+            tag_types.append(t.tag_type)
+    return tag_types
+
 def img_tags_all_category(img_obj):
     types = get_types_img(img_obj) # all tag types in the image
     type_tags = {} # dict of all tags per type
@@ -130,33 +140,32 @@ def get_confidence(img_obj, tag_name):
 
 # get all images with tag name in descending get_confidence
 # returns dict of image objects to confidence
-def search_by_tag(tag_name):
-    tags = sess.query(Tags)\
-                .filter(Tags.name == tag_name)\
-                .order_by(Tags.confidence.desc())\
-                .all()
-    if len(tags) == 0:
-        return None
-    for t in tags:
-        images = sess.query(Image_Tags)\
-                     .filter(Image_Tags.tag_id == t.tag_id)\
-                     .all()
-    match_images = imgtg_to_img(images)
-    dict = {}
-    for m in match_images:
-        dict[m] = get_confidence(m, tag_name)
-    return dict
+def search_by_tag(tag_name, netid):
+    print(tag_name)
+    user_obj = add_get_user(netid)
+    albums = get_all_albums(netid)
+    images = []
+    for a in albums:
+        img = images_album(a)
+        for i in img:
+            images.append(i)
+    bingo = {}
+    flag = False
+    for i in images:
+        iTags = img_tags_all_category(i)
+        for types in iTags:
+            for pair in iTags[types]:
+                t = pair[0]
+                confidence = pair[1]
+                if t == tag_name:
+                    bingo[i] = pair[1]
+                    flag = True
+                    break
+            if flag == True:
+                break
+    return bingo
 
-############################################################## other functions #
-
-# get all tag types for an image
-def get_types_img(img_obj):
-    tags = get_tags_general(img_obj)
-    tag_types = []
-    for t in tags:
-        if t.tag_type not in tag_types:
-            tag_types.append(t.tag_type)
-    return tag_types
+####################################################################### albums #
 
 # get album by id
 def album_obj_id(id):
@@ -177,36 +186,6 @@ def images_album(album_obj):
                 .all()
     return images
 
-# num of images with tag
-def tag_num_img(name):
-    search = sess.query(Tags)\
-                .filter(Tags.name == name)\
-                .all()
-    for t in search:
-        images = sess.query(Image_Tags)\
-                     .filter(Image_Tags.tag_id == t.tag_id)\
-                     .all()
-    match_images = imgtg_to_img(images)
-    return len(match_images)
-
-# get all tags and num of images that contains that tag
-def get_all_tags():
-    tags = {}
-    objs = sess.query(Tags).all()
-    for o in objs:
-        name = o.name
-        if name not in tags:
-            tags[name] = tag_num_img(name)
-    return sorted(tags.items(), key=lambda x: x[1], reverse=True)
-
-def is_tag(tag_name):
-    tags = sess.query(Tags)\
-                .filter(Tags.name == tag_name)\
-                .all()
-    if len(tags) == 0:
-        return False
-    return True
-
 def is_album(album_name):
     album = sess.query(Albums)\
                 .filter(Albums.name == album_name)\
@@ -219,5 +198,43 @@ def get_all_albums(user):
     a = sess.query(Albums)\
             .filter(Albums.net_id == user)\
             .all()
-
     return a
+
+####################################################################### others #
+
+# get all tags and num of images that contains that tag
+def get_all_tags(netid):
+    user_obj = add_get_user(netid)
+    albums = get_all_albums(netid)
+    images = []
+    for a in albums:
+        img = images_album(a)
+        for i in img:
+            images.append(i)
+    tags = {}
+    for i in images:
+        iTags = img_tags_all_category(i)
+        for types in iTags:
+            for pair in iTags[types]:
+                t = pair[0]
+                if t in tags:
+                    tags[t] += 1
+                else:
+                    tags[t] = 1
+    return sorted(tags.items(), key=lambda x: x[1], reverse=True)
+
+def is_tag(tag_name):
+    tags = sess.query(Tags)\
+                .filter(Tags.name == tag_name)\
+                .all()
+    if len(tags) == 0:
+        return False
+    return True
+
+# image size valid?
+def check_size(content):
+    TWENTY_MB = 20971520
+    size = len(content)
+    if (size == 0) or (size > TWENTY_MB):
+        return False
+    return True
