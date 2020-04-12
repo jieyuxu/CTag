@@ -9,7 +9,7 @@
     <h1> {{images|length}} Images for {{search}} </h1> <br>
 
     {% for key in images %}
-    <a href="/image?img={{key.image_id}}">
+    <a href="/image?img={{key[0].image_id}}">
     <img src="{{key[0].url}}"/>
     </a>
     Confidence: {{ key[1] }}% <br>
