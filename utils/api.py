@@ -218,9 +218,8 @@ def get_all_tags(netid):
             for pair in iTags[types]:
                 t = pair[0]
                 if t in tags:
-                    tags[t] += 1
-                else:
-                    tags[t] = 1
+                    continue
+                tags[t] = len(search_by_tag(t, netid))
     return sorted(tags.items(), key=lambda x: x[1], reverse=True)
 
 def is_tag(tag_name):
