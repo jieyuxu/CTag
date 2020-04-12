@@ -7,7 +7,7 @@ from utils.googleapi import *
 from base64 import b64encode
 from CAS import CAS, login
 from CAS import login_required
-from s3 import list_files, upload_file, upload_file_to_s3
+from s3 import list_files, upload_file
 from werkzeug.utils import secure_filename
 import os
 
@@ -86,21 +86,23 @@ def success():
             
             files = request.files.getlist("file")
             file_tag = {}
+            # links = []
             for f in files:
                 # upload file to aws
                 f.save(f.filename)
                 upload_file(f"{f.filename}", BUCKET)
-                link = "https://iw-spring.s3.amazonaws.com/%s" % f.filename
-                # os.remove(f.filename)
-
-                # add image to db
+                link = "https://iw-spring.s3.amazonaws.com/uploads/%s" % f.filename
+                # links.append(link)
+                
+                f.seek(0)
                 content = f.read()
                 tags, d_types = annotate_img_bytestream(content)
                 img_obj = add_image(album_obj, link, tags, d_types)
 
                 type_tags = img_tags_all_category(img_obj)
                 file_tag[f] = type_tags
-                
+
+                os.remove(f.filename)                
             return render_template("success.html", album = album, file_tag = file_tag)
     return render_template("signin.html")
 
@@ -144,8 +146,9 @@ def image():
         id = request.args.get('img')
         img_obj = img_obj_id(id)
         album = album_obj_id(img_obj.album_id)
-        type_tags = img_tags_all_category(img_obj)        
-        return render_template("image.html", image = img, album = album, type_tags = type_tags)
+        type_tags = img_tags_all_category(img_obj) 
+        print(img_obj.url)       
+        return render_template("image.html", image = img_obj.url, album = album, type_tags = type_tags)
     return render_template("signin.html")
 
 @app.route('/tag')
