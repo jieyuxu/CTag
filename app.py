@@ -121,15 +121,15 @@ def search():
                 i = i.strip().lower()
                 t = False
                 a = False
-                if is_tag(i):
-                    num_images = len(search_by_tag(i, netid))
+                num_images = len(search_by_tag(i, netid))
+                if num_images != 0:
                     tags[i] = num_images
                     t = True
-                if is_album(i):
-                    user_obj = add_get_user(netid)
-                    album_obj = add_get_album(i, user_obj)
-                    num_images = len(images_album(album_obj))
-                    albums[i] = num_images
+                results = get_search_albums(i, netid)
+                if len(results) != 0:
+                    for r in results:
+                        num_images = len(images_album(r))
+                        albums[r.name] = num_images
                     a = True
                 if not a and not t:
                     reject.append(i)

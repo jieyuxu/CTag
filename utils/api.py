@@ -1,6 +1,6 @@
 from utils.database import *
 from flask_sqlalchemy_session import current_session
-from sqlalchemy import and_
+from sqlalchemy import and_, func
 import base64
 import os
 
@@ -186,26 +186,27 @@ def images_album(album_obj):
                 .all()
     return images
 
-def is_album(album_name):
+# get all albums with same letters as album_name, regardless of case
+def get_search_albums(album_name, netid):
     album = sess.query(Albums)\
-                .filter(Albums.name == album_name)\
+                .filter(func.lower(Albums.name) == album_name, Albums.net_id == netid)\
                 .all()
-    if len(album) == 0:
-        return False
-    return True
+    return album
 
 def get_all_albums(user):
-    a = sess.query(Albums)\
+    albums = {}
+    query = sess.query(Albums)\
             .filter(Albums.net_id == user)\
             .all()
-    return a
-
+    for q in query:
+        albums[q] = len(images_album(q))
+    return albums
 ####################################################################### others #
 
 # get all tags and num of images that contains that tag
 def get_all_tags(netid):
     user_obj = add_get_user(netid)
-    albums = get_all_albums(netid)
+    albums = get_all_albums(netid).keys()
     images = []
     for a in albums:
         img = images_album(a)
@@ -221,14 +222,6 @@ def get_all_tags(netid):
                     continue
                 tags[t] = len(search_by_tag(t, netid))
     return sorted(tags.items(), key=lambda x: x[1], reverse=True)
-
-def is_tag(tag_name):
-    tags = sess.query(Tags)\
-                .filter(Tags.name == tag_name)\
-                .all()
-    if len(tags) == 0:
-        return False
-    return True
 
 # image size valid?
 def check_size(content):
