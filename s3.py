@@ -1,5 +1,8 @@
 import boto3
+import os
 
+def check_file_bytes(file_name):
+    return os.stat(file_name).st_size
 
 def upload_file(file_name, bucket):
     """
