@@ -112,19 +112,24 @@ def search():
             search = request.form['search']
             if search is '':
                 return render_template("index.html")
+            netid = session['username']
             input = search.split(',')
             tags = {}
-            albums = []
+            albums = {}
             reject = []
             for i in input:
                 i = i.strip()
                 t = False
                 a = False
                 if is_tag(i):
-                    tags[i] = tag_num_img(i)
+                    num_images = len(search_by_tag(i, netid))
+                    tags[i] = num_images
                     t = True
                 if is_album(i):
-                    albums.append(i)
+                    user_obj = add_get_user(netid)
+                    album_obj = add_get_album(i, user_obj)
+                    num_images = len(images_album(album_obj))
+                    albums[i] = num_images
                     a = True
                 if not a and not t:
                     reject.append(i)
