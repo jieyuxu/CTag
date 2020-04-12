@@ -52,7 +52,7 @@ def add_image(album, url, tags=None, tag_type=None):
     if tags is not None:
         for t in tags:
             type_obj = add_get_tagType(tag_type[t])
-            tag_obj = add_get_tag(t, tags[t],type_obj)
+            tag_obj = add_get_tag(t.lower(), tags[t],type_obj)
             image.tags.append(tag_obj)
 
     sess.add(image)
@@ -158,12 +158,12 @@ def search_by_tag(tag_name, netid):
                 t = pair[0]
                 confidence = pair[1]
                 if t == tag_name:
-                    bingo[i] = pair[1]
+                    bingo[i] = confidence
                     flag = True
                     break
             if flag == True:
                 break
-    return bingo
+    return sorted(bingo.items(), key=lambda x: x[1], reverse=True)
 
 ####################################################################### albums #
 

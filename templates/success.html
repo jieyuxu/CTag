@@ -15,7 +15,7 @@
       {% for key in file_tag %}
       <p>File Name: {{key.filename}}</p>
             {% for type in file_tag[key] %}
-                {{type}} <br>
+                <b>{{type}} </b> <br>
                 {% for line in file_tag[key][type] %}
                     <a href="/tag?tag_name={{line[0]}}"> {{line[0]}}</a> (Confidence: {{line[1]}}%) <br>
                 {% endfor %}

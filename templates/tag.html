@@ -10,9 +10,9 @@
 
     {% for key in images %}
     <a href="/image?img={{key.image_id}}">
-    <img src="{{key.url}}"/>
+    <img src="{{key[0].url}}"/>
     </a>
-    Confidence: {{ images[key] }}% <br>
+    Confidence: {{ key[1] }}% <br>
     {% endfor %}
 
 {% endif %}

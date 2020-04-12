@@ -118,7 +118,7 @@ def search():
             albums = {}
             reject = []
             for i in input:
-                i = i.strip()
+                i = i.strip().lower()
                 t = False
                 a = False
                 if is_tag(i):
