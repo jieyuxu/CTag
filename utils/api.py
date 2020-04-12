@@ -199,14 +199,14 @@ def get_all_albums(user):
             .filter(Albums.net_id == user)\
             .all()
     for q in query:
-        albums[q.name] = len(images_album(q))
+        albums[q] = len(images_album(q))
     return albums
 ####################################################################### others #
 
 # get all tags and num of images that contains that tag
 def get_all_tags(netid):
     user_obj = add_get_user(netid)
-    albums = get_all_albums(netid)
+    albums = get_all_albums(netid).keys()
     images = []
     for a in albums:
         img = images_album(a)
