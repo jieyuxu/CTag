@@ -7,7 +7,7 @@ from utils.googleapi import *
 from base64 import b64encode
 from CAS import CAS, login
 from CAS import login_required
-from s3 import list_files, upload_file
+from s3 import list_files, upload_file, check_file_bytes
 from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
@@ -45,7 +45,7 @@ def caslogin():
       print("confirming user logged into session", session['username'])
       session.modified = True
       add_get_user(cas.username)
-   return render_template("index.html")
+   return redirect('/')
 
 @app.route('/caslogout')
 def caslogout():
@@ -77,18 +77,14 @@ def success():
 
             files = request.files.getlist("file")
             file_tag = {}
-            # links = []
-            for f in files:
-                valid = check_size(f.read())
-                if not valid:
-                    non_valid.append(f.read())
-                    continue
 
+            for f in files:
                 # upload file to aws
                 f.save(f.filename)
+                if check_file_bytes(f.filename) == 0:
+                    continue
                 upload_file(f"{f.filename}", BUCKET)
                 link = "https://iw-spring.s3.amazonaws.com/uploads/%s" % f.filename
-                # links.append(link)
 
                 f.seek(0)
                 content = f.read()
