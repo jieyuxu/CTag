@@ -3,7 +3,10 @@ proposal/ timeline: https://docs.google.com/document/d/1PwHCOXRdCH0rVnoNvRV-OCeN
 Amy 4/12:
 1) fixed zero bytes checker blocking aws
 2) modularized file checker code -> now in s3.py
-3) fixed display for all tags; now responsive and scalable for many tags
+3) fixed display for all tags, image; now responsive and scalable for many tags
+4) added generate pdf feature -- pdf needs to be aesthetically improved but otherwise it's there
+   - looking to add csv export for all albums, but all albums not created yet
+
 
 Suki 4/12:
 
