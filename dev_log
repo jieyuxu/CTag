@@ -3,8 +3,10 @@ proposal/ timeline: https://docs.google.com/document/d/1PwHCOXRdCH0rVnoNvRV-OCeN
 Suki 4/12:
 
 - got primary training data
-- made tags user-specific // incr. efficiency
-- added check for file size
+- made tags user-specific + more efficient
+- case-insensentive for tags (search-wise: Tag = tag)
+- albums case sensitive (if search tAg, get Tag and tag etc.)
+- heroku
 
 ** limitation: duplicate images
 

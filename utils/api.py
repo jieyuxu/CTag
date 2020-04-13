@@ -207,20 +207,17 @@ def get_all_albums(user):
 def get_all_tags(netid):
     user_obj = add_get_user(netid)
     albums = get_all_albums(netid).keys()
-    images = []
+    tags = {}
     for a in albums:
         img = images_album(a)
         for i in img:
-            images.append(i)
-    tags = {}
-    for i in images:
-        iTags = img_tags_all_category(i)
-        for types in iTags:
-            for pair in iTags[types]:
-                t = pair[0]
+            iTags = get_tags_general(i)
+            for t in iTags:
+                t = t.name
                 if t in tags:
-                    continue
-                tags[t] = len(search_by_tag(t, netid))
+                    tags[t] += 1
+                else:
+                    tags[t] = 1
     return sorted(tags.items(), key=lambda x: x[1], reverse=True)
 
 # image size valid?
