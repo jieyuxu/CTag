@@ -182,7 +182,7 @@ def download_pdf():
 @app.route('/albums')
 def albums():
     if isLoggedIn():
-
+        print("hi")
     else:
         return render_template("signin.html")
 
