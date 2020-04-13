@@ -179,12 +179,12 @@ def download_pdf():
     else:
         return render_template("signin.html")
 
-@app.route('/albums')
-def albums():
-    if isLoggedIn():
-        print("hi")
-    else:
-        return render_template("signin.html")
+# @app.route('/album')
+# def albums():
+#     if isLoggedIn():
+#         user_obj = add_get_user
+#     else:
+#         return render_template("signin.html")
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8000, debug = True)
