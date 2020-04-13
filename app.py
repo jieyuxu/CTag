@@ -4,6 +4,7 @@ from flask_sqlalchemy_session import flask_scoped_session
 from utils.base import session_factory
 from utils.api import *
 from utils.googleapi import *
+from utils.custom import *
 from base64 import b64encode
 from CAS import CAS, login
 from CAS import login_required
@@ -34,7 +35,8 @@ def isLoggedIn():
 @app.route('/signin')
 def signin():
     if isLoggedIn():
-      return render_template("index.html")
+      albums = get_all_albums(session['username'])
+      return render_template("index.html", albums=albums)
     return render_template("signin.html")
 
 @app.route('/caslogin')
@@ -89,7 +91,9 @@ def success():
 
                 f.seek(0)
                 content = f.read()
-                tags, d_types = annotate_img_bytestream(content)
+                gtags, d_types = annotate_img_bytestream(content)
+                custom_tags = custom_tagger(content)
+                tags, d_types = combine_tags(gtags, d_types, custom_tags)
                 img_obj = add_image(album_obj, link, tags, d_types)
 
                 type_tags = img_tags_all_category(img_obj)
