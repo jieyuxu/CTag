@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, send_file, redirect
-from flask import session, Response
+from flask import session, Response, make_response
 from flask_sqlalchemy_session import flask_scoped_session
 from utils.base import session_factory
 from utils.api import *
@@ -9,6 +9,7 @@ from CAS import CAS, login
 from CAS import login_required
 from s3 import list_files, upload_file, check_file_bytes
 from werkzeug.utils import secure_filename
+from pdfkit import from_string, configuration
 
 app = Flask(__name__)
 app.secret_key = 'bdfa8a83f16eb4f95dc2473fe4a50820b14e74cc70cef6ae'
@@ -68,7 +69,6 @@ def index():
 def success():
     if isLoggedIn():
         # netid = "jyxu"
-        print(session['username'])
         user_obj = add_get_user(session['username'])
         non_valid = []
         if request.method == 'POST':
@@ -82,6 +82,7 @@ def success():
                 # upload file to aws
                 f.save(f.filename)
                 if check_file_bytes(f.filename) == 0:
+                    non_valid.append(f.filename)
                     continue
                 upload_file(f"{f.filename}", BUCKET)
                 link = "https://iw-spring.s3.amazonaws.com/uploads/%s" % f.filename
@@ -145,7 +146,7 @@ def image():
         album = album_obj_id(img_obj.album_id)
         type_tags = img_tags_all_category(img_obj)
         print(img_obj.url)
-        return render_template("image.html", image = img_obj.url, album = album, type_tags = type_tags)
+        return render_template("image.html", id=id, image = img_obj.url, album = album, type_tags = type_tags)
     return render_template("signin.html")
 
 @app.route('/tag')
@@ -156,6 +157,34 @@ def tag():
         return render_template("tag.html", search = tag_name, images = images)
     return render_template("signin.html")
 
-#
+@app.route('/download/output.pdf', methods=['POST', 'GET'])
+def download_pdf():
+    if isLoggedIn():
+        if request.method == 'POST':
+            id = request.form['id']
+            img_obj = img_obj_id(id)
+            album = album_obj_id(img_obj.album_id)
+            type_tags = img_tags_all_category(img_obj)
+
+            config = configuration(wkhtmltopdf='/usr/local/bin/wkhtmltopdf')
+
+            template_string = render_template("report.html", image = img_obj.url, album = album, type_tags = type_tags)
+        
+            response = make_response(from_string(template_string, False, configuration = config))
+            response.headers['Content-Type'] = 'application/pdf'
+            response.headers['Content-Disposition'] = 'attachment; filename=output.pdf'
+
+            # return send_file('output.pdf', as_attachment=True)
+            return response 
+    else:
+        return render_template("signin.html")
+
+@app.route('/albums')
+def albums():
+    if isLoggedIn():
+
+    else:
+        return render_template("signin.html")
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8000, debug = True)
