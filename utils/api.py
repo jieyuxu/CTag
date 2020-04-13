@@ -52,7 +52,7 @@ def add_image(album, url, tags=None, tag_type=None):
     if tags is not None:
         for t in tags:
             type_obj = add_get_tagType(tag_type[t])
-            tag_obj = add_get_tag(t.lower(), tags[t],type_obj)
+            tag_obj = add_get_tag(t.lower(), tags[t], type_obj)
             image.tags.append(tag_obj)
 
     sess.add(image)
@@ -227,3 +227,26 @@ def check_size(content):
     if (size == 0) or (size > TWENTY_MB):
         return False
     return True
+
+# combine tags from coures
+def combine_tags(gtags, d_types, custom_tags):
+    google = set(gtags.keys())
+    custom = set(custom_tags.keys())
+    oGoogle = google.difference(custom)
+    oCustom = custom.difference(google)
+    tags = {}
+
+    # for same ones
+    for c in custom_tags:
+        if c in gtags:
+            print(custom_tags[c])
+            print(gtags[c])
+            tags[c] = (custom_tags[c] + gtags[c]) / 2.0
+    # those only in googleapis
+    for c in oGoogle:
+        tags[c] = gtags[c] / 2.0
+    for c in oCustom:
+        tags[c] = custom_tags[c] / 2.0
+        d_types[c] = 'Label'
+
+    return tags, d_types
