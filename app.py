@@ -170,7 +170,7 @@ def download_pdf():
             album = album_obj_id(img_obj.album_id)
             type_tags = img_tags_all_category(img_obj)
 
-            config = configuration(wkhtmltopdf='/usr/local/bin/wkhtmltopdf')
+            # config = configuration(wkhtmltopdf='/usr/local/bin/wkhtmltopdf')
 
             template_string = render_template("report.html", image = img_obj.url, album = album, type_tags = type_tags)
         
