@@ -6,15 +6,15 @@ Base.metadata.drop_all(engine)
 Base.metadata.create_all(engine)
 
 # populate database
-amy = Users(net_id='jyxu')
-lrrh = Albums(name='little red', user=amy)
-aiwl = Albums(name='alice wonderland', user=amy)
+# amy = Users(net_id='jyxu')
+# lrrh = Albums(name='little red', user=amy)
+# aiwl = Albums(name='alice wonderland', user=amy)
 
-sentiment = Tag_Types(name='sentiment')
-object = Tag_Types(name='object')
+# sentiment = Tag_Types(name='sentiment')
+# object = Tag_Types(name='object')
 
-truck = Tags(name='truck', confidence=50, type=object)
-happy = Tags(name='happy', confidence=70, type=sentiment)
+# truck = Tags(name='truck', confidence=50, type=object)
+# happy = Tags(name='happy', confidence=70, type=sentiment)
 
 
 # with open("photo.jpg", "rb") as image:
@@ -28,13 +28,13 @@ happy = Tags(name='happy', confidence=70, type=sentiment)
 # img2.tags.append(truck)
 
 sess = session_factory()
-sess.add(amy)
-sess.add(lrrh)
-sess.add(aiwl)
-sess.add(sentiment)
-sess.add(object)
-sess.add(truck)
-sess.add(happy)
+# sess.add(amy)
+# sess.add(lrrh)
+# sess.add(aiwl)
+# sess.add(sentiment)
+# sess.add(object)
+# sess.add(truck)
+# sess.add(happy)
 # sess.add(img1)
 # sess.add(img2)
 
