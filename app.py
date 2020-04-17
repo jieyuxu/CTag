@@ -173,23 +173,34 @@ def download_pdf():
             config = configuration(wkhtmltopdf='/usr/local/bin/wkhtmltopdf')
 
             template_string = render_template("report.html", image = img_obj.url, album = album, type_tags = type_tags)
-        
+
             response = make_response(from_string(template_string, False, configuration = config))
             response.headers['Content-Type'] = 'application/pdf'
             response.headers['Content-Disposition'] = 'attachment; filename=output.pdf'
 
             # return send_file('output.pdf', as_attachment=True)
-            return response 
+            return response
     else:
         return render_template("signin.html")
 
 @app.route('/album')
-def albums():
+def album():
     if isLoggedIn():
-        user_obj = add_get_user(session['username'])
-        return render_template('album.html')
+        album_id = request.args.get('id')
+        album_obj = album_obj_id(album_id)
+        images = images_album(album_obj)
+        size = int(len(images) / 4)
+        return render_template('album.html', images = images, name = album_obj.name, size = size)
     else:
         return render_template("signin.html")
 
+@app.route('/all_albums')
+def all_albums():
+    if isLoggedIn():
+        netid = session['username']
+        albums = get_all_albums(netid)
+        return render_template('all_albums.html', albums = albums)
+    else:
+        return render_template("signin.html")
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8000, debug = True)

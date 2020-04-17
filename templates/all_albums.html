@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% block dashboard_home %}
+<div class="container-fluid">
+
+  {% if albums is none %}
+      Sorry, there are currently no albums yet!
+  {% else %}
+
+      <h1> {{albums|length}} Albums </h1> <br>
+
+      <div class="row">
+      {% for key in albums %}
+            <div class="col-md-3 mb-4">
+              <a href="/album?id={{key[0].album_id}}">
+                <div class="card border-left-primary shadow h-100 py-2">
+                  <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                      <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">{{key[0].name}}</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{key[1]}} pictures</div>
+                      </div>
+                      <!-- <div class="col-auto">
+                        <i class="fas fa-calendar fa-2x text-gray-300"></i>
+                      </div> -->
+                    </div>
+                  </div>
+                </div>
+              </a>
+            </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+
+</div>
+{% endblock %}

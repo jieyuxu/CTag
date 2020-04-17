@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block dashboard_home %}
+<div class="container-fluid">
+
+  <!-- Header -->
+  <div class="header">
+    <h1>{{name}}</h1>
+    <p>Resize the browser window to see the responsive effect.</p>
+  </div>
+
+  <!-- Photo Grid -->
+  <div class="row">
+      {% for batch in images|batch(size) %}
+        <div class="column">
+         {% for i in batch %}
+                <a href="/image?img={{i.image_id}}">
+                <img src="{{i.url}}" style="width:100%">
+                </a>
+          {% endfor %}
+          </div>
+      {% endfor %}
+  </div>
+
+</div>
+{% endblock %}
