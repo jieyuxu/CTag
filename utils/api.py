@@ -150,8 +150,8 @@ def search_by_tag(tag_name, netid):
         for i in img:
             images.append(i)
     bingo = {}
-    flag = False
     for i in images:
+        flag = False
         iTags = img_tags_all_category(i)
         for types in iTags:
             for pair in iTags[types]:
@@ -225,6 +225,9 @@ def get_all_tags(netid):
         for i in img:
             iTags = get_tags_general(i)
             for t in iTags:
+                if t.name == 'sorrow':
+                    print('here')
+                    print(i)
                 t = t.name
                 if t in tags:
                     tags[t] += 1
