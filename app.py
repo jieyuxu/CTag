@@ -20,7 +20,8 @@ sess = flask_scoped_session(session_factory, app)
 cas = CAS(app)
 app.config['CAS_SERVER'] = "https://fed.princeton.edu/cas/login"
 app.config['CAS_AFTER_LOGIN'] = 'caslogin'
-app.config['CAS_AFTER_LOGOUT'] = 'http://localhost:8000/caslogout'
+# app.config['CAS_AFTER_LOGOUT'] = 'http://localhost:8000/caslogout'
+app.config['CAS_AFTER_LOGOUT'] = 'http://ctagging.herokuapp.com//caslogout'
 app.config['CAS_LOGIN_ROUTE'] = '/cas'
 ################# AWS ####################
 UPLOAD_FOLDER = "uploads"
@@ -63,7 +64,7 @@ def caslogout():
 def index():
   if isLoggedIn():
       albums = get_all_albums(session['username'])
-      return render_template("index.html", albums=albums)
+      return render_template("index.html", albums=albums, user=session['username'])
   return render_template("signin.html")
 
 # add images

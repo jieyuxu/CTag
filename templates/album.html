@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% block extracss %}
-<link href="../static/css/album.css" rel="stylesheet">
+<!-- <link href="../static/css/album.css" rel="stylesheet"> -->
 {% endblock %}
 {% block dashboard_home %}
 <div class="container-fluid">
@@ -14,13 +14,13 @@
   <!-- Photo Grid -->
   <div class="row">
       {% for batch in images|batch(size) %}
-        <div class="column">
-         {% for i in batch %}
-                <a href="/image?img={{i.image_id}}">
-                <img src="{{i.url}}" style="width:100%">
-                </a>
-          {% endfor %}
+        {% for i in batch %}
+          <div class="col col-md-3">
+                  <a href="/image?img={{i.image_id}}">
+                  <img src="{{i.url}}" style="width:100%">
+                  </a>
           </div>
+        {% endfor %}
       {% endfor %}
   </div>
 
