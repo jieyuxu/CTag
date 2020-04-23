@@ -6,23 +6,23 @@ class Users(Base):
     __tablename__ = "users"
 
     net_id = Column(String(120), primary_key=True)
-    albums = relationship("Albums", backref='user') # a user - many albums
+    albums = relationship("Albums", backref='user', passive_deletes=True) # a user - many albums
 
 class Albums(Base):
     __tablename__ = "albums"
 
     album_id = Column(Integer, primary_key=True)
     name = Column(String(120), nullable=False)
-    net_id = Column(String(120), ForeignKey('users.net_id'), nullable=False)
+    net_id = Column(String(120), ForeignKey('users.net_id', ondelete='CASCADE'), nullable=False)
 
-    images = relationship("Images", backref='album') # an album - many images
+    images = relationship("Images", backref='album', passive_deletes=True) # an album - many images
 
 
 class Images(Base):
     __tablename__ = "images"
 
     image_id = Column(Integer, primary_key=True)
-    album_id = Column(Integer, ForeignKey('albums.album_id'), nullable=False)
+    album_id = Column(Integer, ForeignKey('albums.album_id', ondelete='CASCADE'), nullable=False)
     picture = Column(LargeBinary, nullable=True)
     url = Column(String, nullable=False)
 

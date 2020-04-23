@@ -195,6 +195,27 @@ def album():
     else:
         return render_template("signin.html")
 
+@app.route('/change_album')
+def change_album():
+    if isLoggedIn():
+        album_id = request.args.get('id')
+        album_obj = album_obj_id(album_id)
+        images = images_album(album_obj)
+        size = int(len(images) / 4)
+        return render_template('album.html', images = images, name = album_obj.name, size = size)
+    else:
+        return render_template("signin.html")
+
+@app.route('/delete_img')
+def delete_img():
+    if isLoggedIn():
+        img_id = request.args.get('img_id')
+        a_id = request.args.get('a_id')
+        remove_img(img_id, a_id)
+        return redirect('/')
+    else:
+        return render_template("signin.html")
+
 @app.route('/all_albums')
 def all_albums():
     if isLoggedIn():
