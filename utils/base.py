@@ -4,7 +4,6 @@ from sqlalchemy.ext.declarative import declarative_base
 import pgpasslib
 import os
 
-
 Base = declarative_base()
 
 # password = pgpasslib.getpass('localhost', 5555, 'qroom', 'postgres')

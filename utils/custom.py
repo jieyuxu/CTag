@@ -15,7 +15,7 @@ def get_prediction(content, project_id, model_id):
 
 def custom_tagger(bytestream):
     project_id = '1014211948718'
-    model_id = 'ICN6153566358429761536'
+    model_id = 'ICN8010175304813248512'
 
     tags = {}
     request = get_prediction(bytestream, project_id, model_id)
