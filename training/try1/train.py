@@ -1,12 +1,12 @@
 import csv
 from os import listdir
 from os.path import isfile, join
-from rekog import *
+from utils.googleapi import *
 import global_dict
-import sys
+
 
 def train_set(set):
-    mypath = "/Users/sukiyip/github/IW_JuniorSpring/training/images/" + set
+    mypath = "/Users/sukiyip/github/IW_JuniorSpring/images/" + set
     # arr = listdir(filepath)
     # print(arr)
 
@@ -21,7 +21,8 @@ def train_set(set):
                 a = [path]
 
                 filepath = mypath + '/' + fname
-                tags = detect_labels(filepath)
+                big_dict, tag_type = annotate_img_path(filepath)
+                tags = big_dict.keys()
                 for i in tags:
                     a.append(i)
                     if i in global_dict.dict:
@@ -68,5 +69,4 @@ def remove_lows():
             filewriter.writerow(row)
 
 if __name__ == '__main__':
-    # train_set(sys.argv[1])
     remove_lows()
