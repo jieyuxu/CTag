@@ -7,7 +7,14 @@ Suki 4/16:
 3) all_albums.html
 
 Amy 4/16:
-1) fixing heroku issue
+1) fixing heroku issue with python dependent not being compatible -- had to install a separate build pack that then installed
+the binary file to fix the issue and had to reconfigure a bunch of Heroku configs (change heroku stack, etc)
+2) fixed album gallery display issue 
+3) updated navbar UI and related templates to reflect most up to date templates
+4) looked into how to write a similiarity algorithm -> most likely a knn neighbors with distance b/w pixels as the metric
+algorithm
+5) improved speed of the pdf generating feature and force download on the pdfs now (since some browsers will display instead
+of download like Chrome)
 
 
 Amy 4/12:
