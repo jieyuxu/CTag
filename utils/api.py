@@ -143,7 +143,7 @@ def get_confidence(img_obj, tag_name):
 def search_by_tag(tag_name, netid):
     print(tag_name)
     user_obj = add_get_user(netid)
-    albums = all_albums(netid)
+    albums = all_albums_ns(netid)
     images = []
     for a in albums:
         img = images_album(a)
@@ -185,6 +185,7 @@ def remove_img(img_id, album_id):
     if num == 0:
         sess.delete(album_obj)
     sess.commit()
+    return album_obj
 
 # change album of an image
 def change_album(image_obj, new_album_obj):
@@ -216,10 +217,10 @@ def get_all_albums(user):
     return sorted(albums.items(), key=lambda x: x[1], reverse=True)
 
 # not sorted
-def all_albums(user):
+def all_albums_ns(netid):
     albums = {}
     query = sess.query(Albums)\
-            .filter(Albums.net_id == user)\
+            .filter(Albums.net_id == netid)\
             .all()
     for q in query:
         albums[q] = len(images_album(q))
@@ -230,7 +231,7 @@ def all_albums(user):
 # get all tags and num of images that contains that tag
 def get_all_tags(netid):
     user_obj = add_get_user(netid)
-    albums = all_albums(netid)
+    albums = all_albums_ns(netid)
     tags = {}
     for a in albums:
         img = images_album(a)

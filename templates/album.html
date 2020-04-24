@@ -1,9 +1,11 @@
 {% extends 'base.html' %}
-{% block extracss %}
-<!-- <link href="../static/css/album.css" rel="stylesheet"> -->
-{% endblock %}
 {% block dashboard_home %}
 <div class="container-fluid">
+  {% if remove %}
+    <div class="alert alert-primary" role="alert">
+        Image successfully removed!
+    </div>
+  {% endif %}
 
   <!-- Header -->
   <div class="header">
