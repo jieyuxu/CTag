@@ -19,9 +19,47 @@
   {% endif %}
 
   <!-- Header -->
-  <div class="header">
-    <h1>{{name}}</h1>
-    <!-- <p>Resize the browser window to see the responsive effect.</p> -->
+  <div class="d-sm-flex align-items-center justify-content-between mb-4">
+      <div class="header">
+        <h1>{{album.name}}</h1>
+        <!-- <p>Resize the browser window to see the responsive effect.</p> -->
+      </div>
+
+      <form method="POST" action="/del_album">
+          <input type="hidden" name="id" value="{{album.album_id}}"></input>
+          <button class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm" type="submit"> Delete Album </button>
+      </form>
+      <button type="button" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"
+      data-toggle="modal" data-target="#exampleModalCenter">
+      Rename Album
+      </button>
+
+      <!-- Modal -->
+      <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLongTitle">Rename Album</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <form method="POST" action="/rename_album">
+            <div class="modal-body">
+                  <div class="form-group">
+                    <input type="text" class="form-control" id="new_name" name="new_name" placeholder="New Album Name">
+                  </div>
+
+                  <input type="hidden" name="id" value="{{album.album_id}}"></input>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button type="submit" class="btn btn-primary">Rename</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
   </div>
 
   <!-- Photo Grid -->

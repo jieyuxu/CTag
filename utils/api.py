@@ -181,9 +181,8 @@ def check_album(album_obj):
     sess.commit()
 
 # remove image from album
-def remove_img(img_id, album_id):
+def remove_img(img_obj, album_id):
     # delete image obj and remove it from album
-    img_obj = img_obj_id(img_id)
     sess.delete(img_obj)
     sess.commit()
     # check if album has anything
@@ -231,6 +230,17 @@ def all_albums_ns(netid):
         albums[q] = len(images_album(q))
     return albums
 
+def delete_album(album_obj):
+    images = images_album(album_obj)
+    for i in images:
+        sess.delete(i)
+    sess.delete(album_obj)
+    sess.commit()
+
+def album_rename(album_obj, new_name):
+    album_obj.name = new_name
+    sess.commit()
+    
 ####################################################################### others #
 
 # get all tags and num of images that contains that tag
