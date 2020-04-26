@@ -135,7 +135,7 @@ def search():
                 if len(results) != 0:
                     for r in results:
                         num_images = len(images_album(r))
-                        albums[r.name] = num_images
+                        albums[r] = num_images
                     a = True
                 if not a and not t:
                     reject.append(i)
