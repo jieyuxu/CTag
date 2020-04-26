@@ -174,23 +174,27 @@ def album_obj_id(id):
                 .first()
     return album
 
-# remove image from album
-def remove_img(img_id, album_id):
-    # delete image obj and remove it from album
-    img_obj = img_obj_id(img_id)
-    sess.delete(img_obj)
-    # check if album has anything
-    album_obj = album_obj_id(album_id)
+def check_album(album_obj):
     num = len(images_album(album_obj))
     if num == 0:
         sess.delete(album_obj)
     sess.commit()
-    return album_obj
+
+# remove image from album
+def remove_img(img_obj, album_id):
+    # delete image obj and remove it from album
+    sess.delete(img_obj)
+    sess.commit()
+    # check if album has anything
+    album_obj = album_obj_id(album_id)
+    check_album(album_obj)
 
 # change album of an image
 def change_album(image_obj, new_album_obj):
+    old_album = image_obj.album
     image_obj.album = new_album_obj
     sess.commit()
+    check_album(old_album)
 
 # get image objs in album
 def images_album(album_obj):
@@ -226,6 +230,17 @@ def all_albums_ns(netid):
         albums[q] = len(images_album(q))
     return albums
 
+def delete_album(album_obj):
+    images = images_album(album_obj)
+    for i in images:
+        sess.delete(i)
+    sess.delete(album_obj)
+    sess.commit()
+
+def album_rename(album_obj, new_name):
+    album_obj.name = new_name
+    sess.commit()
+    
 ####################################################################### others #
 
 # get all tags and num of images that contains that tag
