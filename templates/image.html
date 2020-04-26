@@ -5,9 +5,12 @@
 
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
             <h1 class="h3 mb-0 text-gray-800">Album: {{album.name}} </h1>
-            <button class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"
-              onclick="location.href='/delete_img?img_id={{id}}&a_id={{album.album_id}}'"> Delete Image </button>
-
+            <form action="/delete_img" method="POST" enctype="multipart/form-data">
+                <input type="hidden" name="img_id" value="{{id}}"></input>
+                <input type="hidden" name="a_id" value="{{album.album_id}}"></input>
+                <button class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm" type="submit"> Delete Image </button>
+            </form>
+            
             <button type="button" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"
             data-toggle="modal" data-target="#exampleModalCenter">
             Change Album
@@ -37,7 +40,7 @@
 
                         <div class="form-group">
                           <label for="recipient-name" class="col-form-label">New Album Name:</label>
-                          <input type="text" class="form-control" id="new_album" name="new_album">
+                          <input type="text" class="form-control" id="new_album" name="new_album" placeholder="Only Applies if New Album Selected Above">
                         </div>
 
                         <input type="hidden" name="img_id" value="{{id}}"></input>

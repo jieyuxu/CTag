@@ -174,23 +174,28 @@ def album_obj_id(id):
                 .first()
     return album
 
+def check_album(album_obj):
+    num = len(images_album(album_obj))
+    if num == 0:
+        sess.delete(album_obj)
+    sess.commit()
+
 # remove image from album
 def remove_img(img_id, album_id):
     # delete image obj and remove it from album
     img_obj = img_obj_id(img_id)
     sess.delete(img_obj)
+    sess.commit()
     # check if album has anything
     album_obj = album_obj_id(album_id)
-    num = len(images_album(album_obj))
-    if num == 0:
-        sess.delete(album_obj)
-    sess.commit()
-    return album_obj
+    check_album(album_obj)
 
 # change album of an image
 def change_album(image_obj, new_album_obj):
+    old_album = image_obj.album
     image_obj.album = new_album_obj
     sess.commit()
+    check_album(old_album)
 
 # get image objs in album
 def images_album(album_obj):

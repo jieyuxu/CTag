@@ -1,6 +1,22 @@
 {% extends 'base.html' %}
 {% block dashboard_home %}
 <div class="container-fluid">
+  {% if remove %}
+    <div class="alert alert-primary alert-dismissible fade show" role="alert">
+        Image successfully removed!
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+  {% endif %}
+  {% if change %}
+    <div class="alert alert-primary alert-dismissible fade show" role="alert">
+        Image successfully moved to album {{a_change}}!
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+  {% endif %}
 
   {% if albums is none %}
       Sorry, there are currently no albums yet!
