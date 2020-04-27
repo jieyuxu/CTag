@@ -91,9 +91,27 @@
     </div>
 
     <br>
-
     <div class="row">
-        <h3> Related Images </h3>
+      <h3>Similar Images within Album</h3>
+      <div class="row">
+        {% for i in nearest_neighbors %}
+          <div class="col col-md-3">
+            <img src="https://iw-spring.s3.amazonaws.com/uploads/{{ i['neighbor_name'] }}" class="w-100">
+            Score: {{ i['similarity'] }}
+          </div>
+          <!-- {{ i }}: {{nearest_neighbors[i]}} -->
+        {% endfor %}
+      </div>
+    </div>
+    <div class="row mt-2">
+        <h3> Visually Similar Images from the Web </h3>
+        <div class="row">
+          {% for img in similar_images %}
+          <div class="col col-md-3">
+              <img src="{{img}}" class="w-100">
+            </div>
+          {% endfor %}
+        </div> 
     </div>
 
 </div>

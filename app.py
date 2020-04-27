@@ -5,12 +5,15 @@ from utils.base import session_factory
 from utils.api import *
 from utils.googleapi import *
 from utils.custom import *
+from utils.get_image_feature_vectors import *
+from utils.cluster_image_feature_vectors import *
 from base64 import b64encode
 from CAS import CAS, login
 from CAS import login_required
 from s3 import list_files, upload_file, check_file_bytes
 from werkzeug.utils import secure_filename
 from pdfkit import from_string, configuration
+
 
 app = Flask(__name__)
 app.secret_key = 'bdfa8a83f16eb4f95dc2473fe4a50820b14e74cc70cef6ae'
@@ -154,12 +157,23 @@ def image():
         choose_albums = all_albums_ns(netid)
         print(choose_albums)
         print(album)
+
+        print(img_obj.url)
+        similar_images = detect_web_uri(img_obj.url)
+
+        query = os.path.basename(img_obj.url)
+        url_list= get_all_urls(img_obj.album_id)
+        get_image_feature_vectors(url_list)
+        nearest_neighbors = cluster(query)
+        print(nearest_neighbors)
+
         try:
             del choose_albums[album]
         except:
             pass
         return render_template("image.html", id=id, image = img_obj.url, album = album,
-                                type_tags = type_tags, choose_albums = choose_albums)
+                                type_tags = type_tags, choose_albums = choose_albums, 
+                                similar_images=similar_images, nearest_neighbors=nearest_neighbors)
     return render_template("signin.html")
 
 @app.route('/tag')
