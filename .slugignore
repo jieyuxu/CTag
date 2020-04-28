@@ -3,3 +3,4 @@
 *.jpg
 /training
 *.tgz
+/google-cloud-sdk
