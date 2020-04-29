@@ -73,7 +73,7 @@ def cluster(query):
   trees = 10000
 
   # Reads all file names which stores feature vectors 
-  allfiles = glob.glob('/Users/amy/Documents/IW_JuniorSpring/ImageSimilarityDetection/feature-vectors/*.npz')
+  allfiles = glob.glob('/app/vector-features')
 
   t = AnnoyIndex(dims, metric='angular')
 
