@@ -30,17 +30,17 @@ from scipy import spatial
 #################################################
 # This function reads from 'image_data.json' file
 # Looks for a specific 'filename' value
-# Returns the product id when product image names are matched 
+# Returns the product id when product image names are matched
 # So it is used to find product id based on the product image name
 #################################################
 def match_id(filename):
   with open('/Users/erdemisbilen/Angular/fashionWebScraping/jsonFiles/image_data.json') as json_file:
-    
+
     for file in json_file:
         seen = json.loads(file)
 
         for line in seen:
-          
+
           if filename==line['imageName']:
             print(line)
             return line['productId']
@@ -48,7 +48,7 @@ def match_id(filename):
 #################################################
 
 #################################################
-# This function; 
+# This function;
 # Reads all image feature vectores stored in /feature-vectors/*.npz
 # Adds them all in Annoy Index
 # Builds ANNOY index
@@ -58,7 +58,7 @@ def match_id(filename):
 def cluster(query):
 
   start_time = time.time()
-  
+
   print("---------------------------------")
   print ("Step.1 - ANNOY index generation - Started at %s" %time.ctime())
   print("---------------------------------")
@@ -78,8 +78,8 @@ def cluster(query):
   t = AnnoyIndex(dims, metric='angular')
 
   for file_index, i in enumerate(allfiles):
-    
-    # Reads feature vectors and assigns them into the file_vector 
+
+    # Reads feature vectors and assigns them into the file_vector
     file_vector = np.loadtxt(i)
 
     # Assigns file_name, feature_vectors and corresponding product_id
@@ -87,7 +87,7 @@ def cluster(query):
     file_index_to_file_name[file_index] = file_name
     file_index_to_file_vector[file_index] = file_vector
 
-    # Adds image feature vectors into annoy index   
+    # Adds image feature vectors into annoy index
     t.add_item(file_index, file_vector)
 
     print("---------------------------------")
@@ -100,9 +100,10 @@ def cluster(query):
   t.build(trees)
 
   print ("Step.1 - ANNOY index generation - Finished")
-  print ("Step.2 - Similarity score calculation - Started ") 
-  
+  print ("Step.2 - Similarity score calculation - Started ")
+
   nearest_neighbors_dict = dict()
+  named_nearest_neighbors = []
   # Loops through all indexed items
   for i in file_index_to_file_name.keys():
 
@@ -110,7 +111,7 @@ def cluster(query):
     master_file_name = file_index_to_file_name[i]
 
     if master_file_name != query:
-          continue 
+          continue
 
     master_vector = file_index_to_file_vector[i]
 
@@ -131,26 +132,26 @@ def cluster(query):
       similarity = 1 - spatial.distance.cosine(master_vector, neighbor_file_vector)
       rounded_similarity = int((similarity * 10000)) / 10000.0
 
-      # Appends master product id with the similarity score 
+      # Appends master product id with the similarity score
       # and the product id of the similar items
       named_nearest_neighbors.append({
         'similarity': rounded_similarity,
         # 'master_pi': master_product_id,
         'neighbor_name': neighbor_file_name
         })
-      
+
     # nearest_neighbors_dict[master_file_name] = named_nearest_neighbors
 
-    print("---------------------------------") 
+    print("---------------------------------")
     print("Similarity index       : %s" %i)
-    print("Master Image file name : %s" %file_index_to_file_name[i]) 
-    print("Nearest Neighbors.     : %s" %nearest_neighbors) 
+    print("Master Image file name : %s" %file_index_to_file_name[i])
+    print("Nearest Neighbors.     : %s" %nearest_neighbors)
     print("--- %.2f minutes passed ---------" % ((time.time() - start_time)/60))
 
-  
-  print ("Step.2 - Similarity score calculation - Finished ") 
 
-  print ("Step.3 - Data stored in 'nearest_neighbors.json' file ") 
+  print ("Step.2 - Similarity score calculation - Finished ")
+
+  print ("Step.3 - Data stored in 'nearest_neighbors.json' file ")
   print("--- Prosess completed in %.2f minutes ---------" % ((time.time() - start_time)/60))
-  
+
   return named_nearest_neighbors

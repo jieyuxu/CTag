@@ -240,22 +240,18 @@ def delete_album(album_obj):
 def album_rename(album_obj, new_name):
     album_obj.name = new_name
     sess.commit()
-    
+
 def get_all_urls(album_id):
     urls = []
-    query = sess.query(Albums)\
-            .filter(Albums.album_id == album_id)\
-            .one()
+    query = album_obj_id(album_id)
 
-    images = sess.query(Images)\
-                .filter(Images.album == query)\
-                .all()
+    images = images_album(query)
 
     for img_obj in images:
         urls.append(img_obj.url)
-    
+
     return urls
-    
+
 
 ####################################################################### others #
 
