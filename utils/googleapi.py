@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 from google.cloud import vision
-import io, request
+import io
 
 def combine_dict(emotions, labels):
     tag_type = {}

@@ -13,6 +13,7 @@ from CAS import login_required
 from s3 import list_files, upload_file, check_file_bytes
 from werkzeug.utils import secure_filename
 from pdfkit import from_string, configuration
+from io import BytesIO
 
 
 app = Flask(__name__)
@@ -159,9 +160,7 @@ def image():
         print(album)
 
         print(img_obj.url)
-        response = requests.get(img_obj.url)
-        img = Image.open(BytesIO(response.content))
-        similar_images = detect_web_uri(img)
+        similar_images = detect_web_uri(requests.get(img_obj.url).content)
 
         query = os.path.basename(img_obj.url)
         url_list= get_all_urls(img_obj.album_id)
