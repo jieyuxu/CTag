@@ -241,6 +241,22 @@ def album_rename(album_obj, new_name):
     album_obj.name = new_name
     sess.commit()
     
+def get_all_urls(album_id):
+    urls = []
+    query = sess.query(Albums)\
+            .filter(Albums.album_id == album_id)\
+            .one()
+
+    images = sess.query(Images)\
+                .filter(Images.album == query)\
+                .all()
+
+    for img_obj in images:
+        urls.append(img_obj.url)
+    
+    return urls
+    
+
 ####################################################################### others #
 
 # get all tags and num of images that contains that tag
