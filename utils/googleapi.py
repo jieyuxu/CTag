@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 from google.cloud import vision
-import io
+import io, request
 
 def combine_dict(emotions, labels):
     tag_type = {}
@@ -138,11 +138,10 @@ def detect_labels_bytestream(bytestream):
 
     return label_set
 
-def detect_web_uri(uri):
+def detect_web_uri(bytestream):
     """Detects web annotations in the file located in Google Cloud Storage."""
     client = vision.ImageAnnotatorClient()
-    image = vision.types.Image()
-    image.source.image_uri = uri
+    image = vision.types.Image(content=bytestream)
 
     response = client.web_detection(image=image)
     annotations = response.web_detection
