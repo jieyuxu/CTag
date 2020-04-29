@@ -1,11 +1,16 @@
 proposal/ timeline: https://docs.google.com/document/d/1PwHCOXRdCH0rVnoNvRV-OCeNM10QH6NhPCaf7pC7t-Q/edit?usp=sharing
 
+
 Suki 4/26:
 1) Deleting Images
 2) Changing Albums
 3) Album Search Bug
 4) Delete Album
 5) Rename Album
+
+Amy 4/25:
+1) Finished visual comparison code for (1) web entries and (2) within album
+2) Tested mathematical similarities methods but ultimately used tensorflow
 
 Suki 4/23:
 1) training
