@@ -4,3 +4,4 @@
 /training
 *.tgz
 /google-cloud-sdk
+/setup
