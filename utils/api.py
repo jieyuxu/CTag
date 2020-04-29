@@ -245,9 +245,7 @@ def get_all_urls(album_id):
     urls = []
     query = album_obj_id(album_id)
 
-    images = sess.query(Images)\
-                .filter(Images.album == query)\
-                .all()
+    images = images_album(query)
 
     for img_obj in images:
         urls.append(img_obj.url)
