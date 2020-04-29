@@ -31,6 +31,7 @@ numpy==1.18.2
 oauthlib==3.1.0
 opt-einsum==3.2.1
 pdfkit==0.6.1
+pgpasslib==1.1.0
 Pillow==7.1.2
 protobuf==3.11.3
 psycopg2==2.8.4
