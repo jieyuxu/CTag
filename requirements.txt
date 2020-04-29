@@ -49,3 +49,4 @@ tensorflow-estimator==2.0.0
 tensorflow-hub==0.8.0
 urllib3==1.25.7
 Werkzeug==0.16.0
+xmltodict==0.12.0
