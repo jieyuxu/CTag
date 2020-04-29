@@ -176,7 +176,7 @@ def get_image_feature_vectors(url_list):
     print(os.path.basename(url).split('.'))
     print(os.path.basename(url))
     outfile_name = os.path.basename(url) + ".npz"
-    out_path = os.path.join('/app/vector-features', outfile_name)
+    out_path = os.path.join('/app/vector-features/', outfile_name)
 
     # Saves the 'feature_set' to a text file
     np.savetxt(out_path, feature_set, delimiter=',')

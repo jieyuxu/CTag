@@ -73,7 +73,7 @@ def cluster(query):
   trees = 10000
 
   # Reads all file names which stores feature vectors 
-  allfiles = glob.glob('/app/vector-features')
+  allfiles = glob.glob('/app/vector-features/*.npz')
 
   t = AnnoyIndex(dims, metric='angular')
 
