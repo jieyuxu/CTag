@@ -102,7 +102,6 @@ def cluster(query):
   print ("Step.1 - ANNOY index generation - Finished")
   print ("Step.2 - Similarity score calculation - Started ")
 
-  nearest_neighbors_dict = dict()
   named_nearest_neighbors = []
   # Loops through all indexed items
   for i in file_index_to_file_name.keys():
@@ -121,7 +120,6 @@ def cluster(query):
 
     # Loops through the nearest neighbors of the master item
     for j in nearest_neighbors:
-
       print(j)
 
       # Assigns file_name, image feature vectors and product id values of the similar item
