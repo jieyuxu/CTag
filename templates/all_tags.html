@@ -5,8 +5,46 @@
   {% if tags is none %}
       Sorry, there are currently no tags yet!
   {% else %}
+      <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1> {{tags|length}} Tags </h1>
+        <button type="button" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"
+        data-toggle="modal" data-target="#exampleModalCenter">
+        Remove Tags
+        </button>
 
-      <h1> {{tags|length}} Tags </h1> <br>
+        <!-- Modal -->
+        <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Remove Tags</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <form action="/del_tags" method="POST" enctype="multipart/form-data">
+              <div class="modal-body">
+                      <div class="form-group">
+                        <label for="exampleFormControlSelect2">Delete Tags (Hold Ctrl For Multiple or Deselect)</label>
+                        <select multiple class="form-control" id="del_tags" name="del_tags">
+                            {% for key in tags %}
+                                <option>{{key[0]}}</option>
+                            {% endfor %}
+                        </select>
+                      </div>
+
+                    <!-- <input type="hidden" name="img_id" value="{{id}}"></input> -->
+              </div>
+
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary">Remove</button>
+                </form>
+              </div>
+          </div>
+        </div>
+      </div>
+      </div>
 
       <div class="row">
       {% for key in tags %}

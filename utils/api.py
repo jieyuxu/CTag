@@ -319,6 +319,18 @@ def delete_tags(img_obj, tags):
         sess.delete(query)
     sess.commit()
 
+# array of tag names
+def delete_perm_tags(tags, netid):
+    # get images with the tag
+    for tag_name in tags:
+        imgs = search_by_tag(tag_name, netid)
+        for i in imgs:
+            img_obj = i[0]
+            tag_obj = get_tag_img(img_obj, tag_name)
+            delete_tags(img_obj, [tag_obj])
+    sess.commit()
+
+
 def get_tag_img(img_obj, tag_name):
     tags = get_tags_general(img_obj)
     for t in tags:
