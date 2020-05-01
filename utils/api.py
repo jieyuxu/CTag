@@ -59,6 +59,10 @@ def add_image(album, url, tags=None, tag_type=None):
     sess.commit()
     return image
 
+def add_tag_img(img_obj, tag_obj):
+    img_obj.tags.append(tag_obj)
+    sess.commit()
+
 ######################################################## sorting and searching #
 
 # from an image object, get all tags by desc confidence
@@ -305,3 +309,19 @@ def combine_tags(gtags, d_types, custom_tags):
         d_types[c] = 'Label'
 
     return tags, d_types
+
+# delete tag from image, array of tag_objs
+def delete_tags(img_obj, tags):
+    for tag_obj in tags:
+        query = sess.query(Image_Tags)\
+                    .filter(and_(Image_Tags.image_id == img_obj.image_id, Image_Tags.tag_id == tag_obj.tag_id))\
+                    .first()
+        sess.delete(query)
+    sess.commit()
+
+def get_tag_img(img_obj, tag_name):
+    tags = get_tags_general(img_obj)
+    for t in tags:
+        if t.name == tag_name:
+            return t
+    return

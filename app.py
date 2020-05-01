@@ -160,6 +160,7 @@ def image():
         print(album)
 
         print(img_obj.url)
+
         similar_images = detect_web_uri(requests.get(img_obj.url).content)
 
         query = os.path.basename(img_obj.url)
@@ -173,7 +174,7 @@ def image():
         except:
             pass
         return render_template("image.html", id=id, image = img_obj.url, album = album,
-                                type_tags = type_tags, choose_albums = choose_albums, 
+                                type_tags = type_tags, choose_albums = choose_albums,
                                 similar_images=similar_images, nearest_neighbors=nearest_neighbors)
     return render_template("signin.html")
 
@@ -311,6 +312,55 @@ def rename_album():
                                 change = False, a_change = '')
     else:
         return render_template("signin.html")
+
+@app.route('/edit_img_tag', methods=['POST', 'GET'])
+def edit_img_tag():
+    if isLoggedIn():
+        if request.method == 'POST':
+            id = request.form['img_id']
+            img_obj = img_obj_id(id)
+            album = album_obj_id(img_obj.album_id)
+            # actual deleting
+            del_tags = request.form.getlist('del_tags')
+            tags = []
+            for t in del_tags:
+                tag_obj = get_tag_img(img_obj, t)
+                tags.append(tag_obj)
+            try:
+                delete_tags(img_obj, tags)
+            except:
+                pass
+
+            # adding tags
+            add_tags = request.form['add_tags']
+            if add_tags != '':
+                tags = add_tags.split(',')
+                type_obj = add_get_tagType('Custom Added')
+                for t in tags:
+                    tag_obj = add_get_tag(t.strip(), 100, type_obj)
+                    add_tag_img(img_obj, tag_obj)
+
+            # rendering
+            type_tags = img_tags_all_category(img_obj)
+            netid = session['username']
+            choose_albums = all_albums_ns(netid)
+
+            similar_images = detect_web_uri(requests.get(img_obj.url).content)
+
+            query = os.path.basename(img_obj.url)
+            url_list= get_all_urls(img_obj.album_id)
+            get_image_feature_vectors(url_list)
+            nearest_neighbors = cluster(query)
+            print(nearest_neighbors)
+
+            try:
+                del choose_albums[album]
+            except:
+                pass
+            return render_template("image.html", id=id, image = img_obj.url, album = album,
+                                    type_tags = type_tags, choose_albums = choose_albums,
+                                    similar_images=similar_images, nearest_neighbors=nearest_neighbors)
+    return render_template("signin.html")
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8000, debug = True)

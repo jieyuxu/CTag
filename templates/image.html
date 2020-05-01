@@ -12,6 +12,51 @@
         </form>
 
         <button type="button" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"
+        data-toggle="modal" data-target="#example">
+        Edit Tags
+        </button>
+
+        <!-- Modal -->
+        <div class="modal fade" id="example" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Edit Tags</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <form action="/edit_img_tag" method="POST" enctype="multipart/form-data">
+              <div class="modal-body">
+                      <div class="form-group">
+                        <label for="exampleFormControlSelect2">Delete Tags (Hold Ctrl For Multiple or Deselect)</label>
+                        <select multiple class="form-control" id="del_tags" name="del_tags">
+                          {% for type in type_tags %}
+                              {% for line in type_tags[type] %}
+                                <option>{{line[0]}}</option>
+                              {% endfor %}
+                          {% endfor %}
+                        </select>
+                      </div>
+
+                    <div class="form-group">
+                      <label for="recipient-name" class="col-form-label">New Tags:</label>
+                      <input type="text" class="form-control" id="add_tags" name="add_tags"
+                      placeholder="Enter Tags Separated by Commas...">
+                    </div>
+
+                    <input type="hidden" name="img_id" value="{{id}}"></input>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary">Edit Tags</button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <button type="button" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"
         data-toggle="modal" data-target="#exampleModalCenter">
         Change Album
         </button>
@@ -111,7 +156,7 @@
               <img src="{{img}}" class="w-100">
             </div>
           {% endfor %}
-        </div> 
+        </div>
     </div>
 
 </div>
