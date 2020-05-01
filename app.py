@@ -246,7 +246,8 @@ def tag():
     if isLoggedIn():
         tag_name = request.args.get('tag_name')
         images = search_by_tag(tag_name, session['username'])
-        return render_template("tag.html", search = tag_name, images = images)
+        size = int(len(images) / 4)
+        return render_template("tag.html", search = tag_name, images = images, size=size)
     return render_template("signin.html")
 
 @app.route('/download/output.pdf', methods=['POST', 'GET'])

@@ -8,12 +8,18 @@
 
     <h1> {{images|length}} Images for {{search}} </h1> <br>
 
-    {% for key in images %}
-    <a href="/image?img={{key[0].image_id}}">
-    <img src="{{key[0].url}}"/>
-    </a>
-    Confidence: {{ key[1] }}% <br>
-    {% endfor %}
+    <div class="row">
+      {% for batch in images|batch(size) %}
+        {% for key in batch %}
+          <div class="col col-md-3">
+            <a href="/image?img={{key[0].image_id}}">
+            <img src="{{key[0].url}}" style="width:100%">
+            </a>
+          Confidence: {{ key[1] }}% <br><br>
+          </div>
+        {% endfor %}
+      {% endfor %}
+    </div>
 
 {% endif %}
 
