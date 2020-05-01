@@ -192,6 +192,30 @@ def image():
                                 similar_images=similar_images, nearest_neighbors=nearest_neighbors)
     return render_template("signin.html")
 
+@app.route('/delete_img', methods=['POST', 'GET'])
+def delete_img():
+    if isLoggedIn():
+        if request.method == 'POST':
+            a_id = request.form['a_id']
+            img_obj = img_obj_id(request.form['img_id'])
+            remove = False
+            if img_obj is not None:
+                remove_img(img_obj, a_id)
+                remove = True
+            album_obj = album_obj_id(a_id)
+            if album_obj is None:
+                netid = session['username']
+                albums = get_all_albums(netid)
+                return render_template('all_albums.html', albums = albums, remove = True,
+                                                        change = False, a_change = '')
+            images = images_album(album_obj)
+            size = int(len(images) / 4)
+            return render_template('album.html', images = images,
+                                    album = album_obj, size = size, remove = remove,
+                                    change = False, a_change = '')
+    else:
+        return render_template("signin.html")
+
 @app.route('/edit_img_tag', methods=['POST', 'GET'])
 def edit_img_tag():
     if isLoggedIn():
@@ -284,6 +308,34 @@ def album():
     else:
         return render_template("signin.html")
 
+@app.route('/album_imgs_del', methods=['POST', 'GET'])
+def album_imgs_del():
+    if isLoggedIn():
+        a_id = request.form['id']
+        album_obj = album_obj_id(a_id)
+        images = images_album(album_obj)
+        remove = False
+        for i in images:
+            id = str(i.image_id)
+            try:
+                if 'on' == request.form[id]:
+                    remove_img(i, a_id)
+                    remove = True
+            except:
+                pass
+
+        album_obj = album_obj_id(a_id)
+        if album_obj is None:
+            albums = get_all_albums(session['username'])
+            return render_template('all_albums.html', albums = albums, remove = True,
+                                                    change = False, a_change = '')
+        images = images_album(album_obj)
+        size = int(len(images) / 4)
+        return render_template('album.html', images = images,
+                                album = album_obj, size = size, remove = remove, change = False)
+    else:
+        return render_template("signin.html")
+
 @app.route('/change_album', methods=['POST', 'GET'])
 def album_change():
     if isLoggedIn():
@@ -318,38 +370,18 @@ def album_change():
     else:
         return render_template("signin.html")
 
-@app.route('/delete_img', methods=['POST', 'GET'])
-def delete_img():
-    if isLoggedIn():
-        if request.method == 'POST':
-            a_id = request.form['a_id']
-            img_obj = img_obj_id(request.form['img_id'])
-            if img_obj is not None:
-                remove_img(img_obj, a_id)
-            album_obj = album_obj_id(a_id)
-            if album_obj is None:
-                netid = session['username']
-                albums = get_all_albums(netid)
-                return render_template('all_albums.html', albums = albums, remove = True,
-                                                        change = False, a_change = '')
-            images = images_album(album_obj)
-            size = int(len(images) / 4)
-            return render_template('album.html', images = images,
-                                    album = album_obj, size = size, remove = True,
-                                    change = False, a_change = '')
-    else:
-        return render_template("signin.html")
-
 @app.route('/del_album', methods=['POST', 'GET'])
 def del_album():
     if isLoggedIn():
         if request.method == 'POST':
             album_obj = album_obj_id(request.form['id'])
+            remove = False
             if album_obj is not None:
                 delete_album(album_obj)
+                remove = True
             netid = session['username']
             albums = get_all_albums(netid)
-            return render_template('all_albums.html', albums = albums, remove = True,
+            return render_template('all_albums.html', albums = albums, remove = remove,
                                                     change = False, a_change = '')
     else:
         return render_template("signin.html")
