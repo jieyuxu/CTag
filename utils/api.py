@@ -311,6 +311,7 @@ def combine_tags(gtags, d_types, custom_tags):
     return tags, d_types
 
 # delete tag from image, array of tag_objs
+# returns False if reload
 def delete_tags(img_obj, tags):
     for tag_obj in tags:
         query = sess.query(Image_Tags)\
@@ -318,17 +319,21 @@ def delete_tags(img_obj, tags):
                     .first()
         sess.delete(query)
     sess.commit()
+    return True
 
 # array of tag names
 def delete_perm_tags(tags, netid):
     # get images with the tag
     for tag_name in tags:
         imgs = search_by_tag(tag_name, netid)
+        if len(imgs) == 0:
+            return False
         for i in imgs:
             img_obj = i[0]
             tag_obj = get_tag_img(img_obj, tag_name)
-            delete_tags(img_obj, [tag_obj])
+            reload = delete_tags(img_obj, [tag_obj])
     sess.commit()
+    return True
 
 
 def get_tag_img(img_obj, tag_name):

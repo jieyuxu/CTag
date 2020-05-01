@@ -112,7 +112,7 @@ def success():
 def all_tags():
     if isLoggedIn():
         tags = get_all_tags(session['username'])
-        return render_template("all_tags.html", tags = tags)
+        return render_template("all_tags.html", tags = tags, remove = False)
     return render_template("signin.html")
 
 @app.route('/del_tags', methods=['POST', 'GET'])
@@ -122,11 +122,11 @@ def del_tags():
             netid = session['username']
             # deleting
             del_tags = request.form.getlist('del_tags')
-            delete_perm_tags(del_tags, netid)
+            remove = delete_perm_tags(del_tags, netid)
 
             # rendering
             tags = get_all_tags(netid)
-            return render_template("all_tags.html", tags = tags)
+            return render_template("all_tags.html", tags = tags, remove = remove)
     return render_template("signin.html")
 
 @app.route('/search', methods = ['POST'])
