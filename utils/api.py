@@ -298,14 +298,17 @@ def combine_tags(gtags, d_types, custom_tags):
     # for same ones
     for c in custom_tags:
         if c in gtags:
-            print(custom_tags[c])
+            custom = custom_tags[c] * 100
+            print(custom)
             print(gtags[c])
-            tags[c] = (custom_tags[c] + gtags[c]) / 2.0
+            tags[c] = (custom + gtags[c]) / 2.0
     # those only in googleapis
     for c in oGoogle:
         tags[c] = gtags[c] / 2.0
     for c in oCustom:
-        tags[c] = custom_tags[c] / 2.0
+        custom = custom_tags[c] * 100
+        tags[c] = (custom / 2.0) 
+        print(tags[c])
         d_types[c] = 'Label'
 
     return tags, d_types

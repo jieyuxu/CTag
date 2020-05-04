@@ -97,6 +97,8 @@ def success():
                 f.seek(0)
                 content = f.read()
                 tags, d_types = annotate_img_bytestream(content)
+
+                # gtags, d_types = annotate_img_bytestream(content)
                 # custom_tags = custom_tagger(content)
                 # tags, d_types = combine_tags(gtags, d_types, custom_tags)
                 img_obj = add_image(album_obj, link, tags, d_types)
