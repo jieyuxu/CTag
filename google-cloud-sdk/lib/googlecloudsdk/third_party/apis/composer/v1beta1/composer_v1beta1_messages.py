@@ -722,13 +722,13 @@ class PrivateClusterConfig(_messages.Message):
   Fields:
     enablePrivateEndpoint: Optional. If `true`, access to the public endpoint
       of the GKE cluster is denied.
-    masterIpv4CidrBlock: Optional. The CIDR block from which IPv4 range for
-      GKE master will be reserved. If left blank, the default value of
+    mainIpv4CidrBlock: Optional. The CIDR block from which IPv4 range for
+      GKE main will be reserved. If left blank, the default value of
       '172.16.0.0/23' is used.
   """
 
   enablePrivateEndpoint = _messages.BooleanField(1)
-  masterIpv4CidrBlock = _messages.StringField(2)
+  mainIpv4CidrBlock = _messages.StringField(2)
 
 
 class PrivateEnvironmentConfig(_messages.Message):

@@ -106,19 +106,19 @@ def cluster(query):
   # Loops through all indexed items
   for i in file_index_to_file_name.keys():
 
-    # Assigns master file_name, image feature vectors and product id values
-    master_file_name = file_index_to_file_name[i]
+    # Assigns main file_name, image feature vectors and product id values
+    main_file_name = file_index_to_file_name[i]
 
-    if master_file_name != query:
+    if main_file_name != query:
           continue
 
-    master_vector = file_index_to_file_vector[i]
+    main_vector = file_index_to_file_vector[i]
 
-    # Calculates the nearest neighbors of the master item
+    # Calculates the nearest neighbors of the main item
     nearest_neighbors = t.get_nns_by_item(i, n_nearest_neighbors)
     named_nearest_neighbors = []
 
-    # Loops through the nearest neighbors of the master item
+    # Loops through the nearest neighbors of the main item
     for j in nearest_neighbors:
       print(j)
 
@@ -127,22 +127,22 @@ def cluster(query):
       neighbor_file_vector = file_index_to_file_vector[j]
 
       # Calculates the similarity score of the similar item
-      similarity = 1 - spatial.distance.cosine(master_vector, neighbor_file_vector)
+      similarity = 1 - spatial.distance.cosine(main_vector, neighbor_file_vector)
       rounded_similarity = int((similarity * 10000)) / 10000.0
 
-      # Appends master product id with the similarity score
+      # Appends main product id with the similarity score
       # and the product id of the similar items
       named_nearest_neighbors.append({
         'similarity': rounded_similarity,
-        # 'master_pi': master_product_id,
+        # 'main_pi': main_product_id,
         'neighbor_name': neighbor_file_name
         })
 
-    # nearest_neighbors_dict[master_file_name] = named_nearest_neighbors
+    # nearest_neighbors_dict[main_file_name] = named_nearest_neighbors
 
     print("---------------------------------")
     print("Similarity index       : %s" %i)
-    print("Master Image file name : %s" %file_index_to_file_name[i])
+    print("Main Image file name : %s" %file_index_to_file_name[i])
     print("Nearest Neighbors.     : %s" %nearest_neighbors)
     print("--- %.2f minutes passed ---------" % ((time.time() - start_time)/60))
 
