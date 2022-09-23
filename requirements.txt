@@ -33,7 +33,7 @@ opt-einsum==3.2.1
 pdfkit==0.6.1
 pgpasslib==1.1.0
 Pillow==7.1.2
-protobuf==3.11.3
+protobuf==3.18.3
 psycopg2==2.8.4
 psycopg2-binary==2.8.4
 PyWavelets==1.1.1
